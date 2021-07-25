@@ -11,8 +11,5 @@ const getURL = async ( subroute ) =>{
 };
 
 export {
-    protocol,
-    host,
-    url,
     getURL
 }
