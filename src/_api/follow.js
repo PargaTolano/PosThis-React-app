@@ -15,7 +15,7 @@ const getFollowers= async ( id ) => {
         headers
     };
 
-    return fetch( getURL( `api/follow/GetFollowers/${id}` ), options );
+    return fetch( await getURL( `api/follow/GetFollowers/${id}` ), options );
 }
 
 /**
@@ -31,7 +31,7 @@ const getFollowing = async ( id ) => {
         headers
     };
 
-    return fetch( getURL( `api/follow/GetFollowing/${id}` ), options );
+    return fetch( await getURL( `api/follow/GetFollowing/${id}` ), options );
 };
 
 /**
@@ -47,7 +47,7 @@ const getFollowersCount = async ( id ) => {
         headers
     };
 
-    return fetch( getURL( `api/follow/GetFollowersCount/${id}` ), options );
+    return fetch( await getURL( `api/follow/GetFollowersCount/${id}` ), options );
 };
 
 /**
@@ -63,7 +63,7 @@ const GetFollowingCount = async ( id ) => {
         headers
     };
 
-    return fetch( getURL( `api/follow/GetFollowingCount/${id}` ), options);
+    return fetch( await getURL( `api/follow/GetFollowingCount/${id}` ), options);
 };
 
 /**
@@ -82,7 +82,7 @@ const createFollow = async ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/follow/Create` ), options );
+    return fetch( await getURL( `api/follow/Create` ), options );
 };
 
 /**
@@ -101,7 +101,7 @@ const deleteFollow = async ( model ) =>{
         headers
     };
     
-    return fetch( getURL( `api/follow/Delete` ), options );
+    return fetch( await getURL( `api/follow/Delete` ), options );
 };
 
 export{

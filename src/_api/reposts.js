@@ -8,7 +8,7 @@ import RepostViewModel  from '_model/RepostViewModel';
  * @param   {Number} id
  */
 const getReposts= async ( ) => {
-    return fetch( getURL( `api/reposts/Get` ) );
+    return fetch( await getURL( `api/reposts/Get` ) );
 };
 
 /**
@@ -27,7 +27,7 @@ const createRepost = async ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/reposts/Create` ), options );
+    return fetch( await getURL( `api/reposts/Create` ), options );
 };
 
 /**
@@ -45,7 +45,7 @@ const createRepost = async ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/reposts/Delete/` ), options );
+    return fetch( await getURL( `api/reposts/Delete/` ), options );
 };
 
 export{

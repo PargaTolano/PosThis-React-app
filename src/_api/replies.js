@@ -16,7 +16,7 @@ const getReplies= async ( ) => {
         headers
     };
 
-    return fetch( getURL( `api/replies/Get` ), options );
+    return fetch( await getURL( `api/replies/Get` ), options );
 };
 
 /**
@@ -32,13 +32,13 @@ const getReplies= async ( ) => {
         headers
     };
 
-    return fetch( getURL( `api/replies/Get/${id}` ), options );
+    return fetch( await getURL( `api/replies/Get/${id}` ), options );
 };
 
 /**
  * @param {CReplyModel} model
  */
-const createReply = ( model ) => {
+const createReply = async ( model ) => {
 
     const headers = {
         ...authHeader(),
@@ -59,14 +59,14 @@ const createReply = ( model ) => {
         headers
     };
 
-    return fetch( getURL( `api/replies/Create` ), options );
+    return fetch( await getURL( `api/replies/Create` ), options );
 };
 
 /**
  * @param {Number}      id
  * @param {UReplyModel} model
  */
- const updateReply = ( id, model ) => {
+ const updateReply = async ( id, model ) => {
 
     const headers = {
         ...authHeader()
@@ -89,7 +89,7 @@ const createReply = ( model ) => {
         headers
     };
 
-    return fetch( getURL( `api/replies/Update/${id}` ), options );
+    return fetch( await getURL( `api/replies/Update/${id}` ), options );
 };
 
 /**
@@ -106,7 +106,7 @@ const createReply = ( model ) => {
         headers
     };
 
-    return fetch( getURL( `api/replies/Delete/${id}` ), options );
+    return fetch( await getURL( `api/replies/Delete/${id}` ), options );
 };
 
 export{

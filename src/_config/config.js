@@ -1,12 +1,14 @@
-const protocol = 'http';
+let url = null;
 
-const host =  'pargatolano-001-site1.dtempurl.com';
-
-const port = '';
-
-const url = `${protocol}://${host}${port}`;
-
-const getURL = ( subroute ) =>`${url}/${subroute}`;
+const getURL = async ( subroute ) =>{
+    if( url === null){
+        const res  = await fetch('/api.json');
+        const { protocol, host, port} = await res.json();
+    
+        url = `${protocol}://${host}${port.length > 0 ? `:${port}`: port }`;
+    }
+    return `${url}/${subroute}`;
+};
 
 export {
     protocol,

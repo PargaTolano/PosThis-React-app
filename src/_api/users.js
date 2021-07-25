@@ -5,7 +5,7 @@ import { authenticationService }    from '_services';
 
 import { SignUpModel, LogInModel, SearchRequestModel, UpdateUserViewModel} from '_model';
 
-const getUsers = () => {
+const getUsers = async () => {
 
     let headers= {
         ...authHeader()
@@ -15,10 +15,10 @@ const getUsers = () => {
         headers
     };
 
-    return fetch( getURL( 'api/users/Get' ), options );
+    return fetch( await getURL( 'api/users/Get' ), options );
 }
 
-const getUser = ( id ) => {
+const getUser = async ( id ) => {
 
     let headers= {
         ...authHeader(),
@@ -29,13 +29,13 @@ const getUser = ( id ) => {
         headers
     };
     
-    return fetch( getURL( `api/users/Get/${id}` ), options );
+    return fetch( await getURL( `api/users/Get/${id}` ), options );
 };
 
 /**
  * @param {SearchRequestModel} model 
  */
-const getSearch = ( model ) =>{
+const getSearch = async ( model ) =>{
 
     let headers= {
         ...authHeader()
@@ -45,7 +45,7 @@ const getSearch = ( model ) =>{
         headers
     };
 
-    let url = new URL( getURL( 'api/users/GetSearch'));
+    let url = new URL( await getURL( 'api/users/GetSearch'));
 
     url.searchParams.set( 'UserID', authenticationService.currentUserValue.id );
     url.searchParams.set( 'SearchPosts', model.searchPosts );
@@ -59,7 +59,7 @@ const getSearch = ( model ) =>{
 /**
  * @param {Number} id id del usuario en sesion
  */
-const getFeed = ( id ) =>{
+const getFeed = async ( id ) =>{
     let headers= {
         ...authHeader()
     };
@@ -68,13 +68,13 @@ const getFeed = ( id ) =>{
         headers
     };
 
-    return fetch( getURL( `api/users/GetFeed/${id}` ), options );
+    return fetch( await getURL( `api/users/GetFeed/${id}` ), options );
 };
 
 /**
  * @param {Number} id id del usuario en sesion
  */
- const getUserFeed = ( id ) =>{
+ const getUserFeed = async ( id ) =>{
     let headers= {
         ...authHeader(),
         'UserID': authenticationService.currentUserValue.id  
@@ -84,7 +84,7 @@ const getFeed = ( id ) =>{
         headers
     };
 
-    return fetch( getURL( `api/users/GetUserPosts/${id}` ), options );
+    return fetch( await getURL( `api/users/GetUserPosts/${id}` ), options );
 };
 
 /**
@@ -102,13 +102,13 @@ const createUser = async ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/security/CreateUser` ), options );
+    return fetch( await getURL( `api/security/CreateUser` ), options );
 };
 
 /**
  * @param {LogInModel} model
  */
-const logIn = ( model ) => {
+const logIn = async ( model ) => {
 
     const headers = {
         'Content-Type': 'application/json'
@@ -120,14 +120,14 @@ const logIn = ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/security/Login` ), options );
+    return fetch( await getURL( `api/security/Login` ), options );
 };
 
 /**
  * @param {Number} id 
  * @param {UpdateUserViewModel} model
  */
-const updateUser = ( id, model ) =>{
+const updateUser = async ( id, model ) =>{
 
     const headers = {
         ...authHeader()
@@ -146,13 +146,13 @@ const updateUser = ( id, model ) =>{
         headers
     };
 
-    return fetch( getURL( `api/users/Update/${id}` ), options );
+    return fetch( await getURL( `api/users/Update/${id}` ), options );
 };
 
 /**
  * @param   {Number} id
  */
-const deleteUser = ( id ) =>{
+const deleteUser = async ( id ) =>{
     const headers = {
         'Content-Type': 'application/json',
         ...authHeader()
@@ -163,7 +163,7 @@ const deleteUser = ( id ) =>{
         headers
     };
     
-    return fetch( getURL( `api/users/Delete/${id}` ), options );
+    return fetch( await getURL( `api/users/Delete/${id}` ), options );
 };
 
 export{

@@ -3,7 +3,7 @@ import { authHeader }            from '_helpers';
 import { authenticationService } from '_services';
 
 const getPosts = async () => {
-    const url = getURL( 'api/post/Get' );
+    const url = await getURL( 'api/post/Get' );
     return fetch( url );
 }
 
@@ -18,13 +18,13 @@ const getPost = async ( id ) => {
         headers
     };
 
-    return fetch( getURL( `api/post/Get/${id}` ), options );
+    return fetch( await getURL( `api/post/Get/${id}` ), options );
 };
 
 /**
  * @param {CPostModel} model
  */
-const createPost = ( model ) => {
+const createPost = async ( model ) => {
 
     const headers = {
         ...authHeader()
@@ -44,14 +44,14 @@ const createPost = ( model ) => {
         headers
     };
 
-    return fetch( getURL( `api/post/Create` ), options );
+    return fetch( await getURL( `api/post/Create` ), options );
 };
 
 /**
  * @param {Number} id 
  * @param {Object} model
  */
-const updatePost = ( id, model ) =>{
+const updatePost = async ( id, model ) =>{
 
     const headers = {
         ...authHeader()
@@ -75,7 +75,7 @@ const updatePost = ( id, model ) =>{
         headers: headers
     };
 
-    return fetch( getURL( `api/post/Update/${id}` ), options );
+    return fetch( await getURL( `api/post/Update/${id}` ), options );
 };
 
 /**
@@ -87,7 +87,7 @@ const deletePost = async ( id ) =>{
         headers: authHeader()
     };
     
-    return fetch( getURL( `api/post/Delete/${id}` ), options );
+    return fetch( await getURL( `api/post/Delete/${id}` ), options );
 };
 
 export{

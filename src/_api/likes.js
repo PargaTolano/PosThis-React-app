@@ -7,7 +7,7 @@ import LikeViewModel from '_model/LikeViewModel';
  * @param   {Number} id
  */
 const getLikes= async ( ) => {
-    let res = await fetch( getURL( `api/likes/Get` ) );
+    let res = await fetch( await getURL( `api/likes/Get` ) );
     return res.json();
 };
 
@@ -15,14 +15,14 @@ const getLikes= async ( ) => {
  * @param   {Number} id
  */
  const getLike = async ( id ) => {
-    let res = await fetch( getURL( `api/likes/Get/${id}` ) );
+    let res = await fetch( await getURL( `api/likes/Get/${id}` ) );
     return res.json();
 };
 
 /**
  * @param {LikeViewModel} model
  */
-const createLike = ( model ) => {
+const createLike = async ( model ) => {
 
     const headers = {
         'Content-Type': 'application/json',
@@ -35,13 +35,13 @@ const createLike = ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/likes/Create` ), options );;
+    return fetch( await getURL( `api/likes/Create` ), options );;
 };
 
 /**
  * @param {LikeViewModel} model
  */
- const deleteLike = ( model ) => {
+ const deleteLike = async ( model ) => {
 
     const headers = {
         'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const createLike = ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/likes/Delete` ), options );
+    return fetch( await getURL( `api/likes/Delete` ), options );
 };
 
 export{

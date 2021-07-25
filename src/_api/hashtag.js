@@ -4,7 +4,7 @@ import {  getURL  }     from '_config';
  * @param   {Number} id
  */
 const getHashtags= async ( ) => {
-    let res = await fetch( getURL( `api/hashtags/Get` ) );
+    let res = await fetch( await getURL( `api/hashtags/Get` ) );
     return res.json();
 };
 
@@ -12,7 +12,7 @@ const getHashtags= async ( ) => {
  * @param   {Number} id
  */
  const getPostsWithHashtag = async ( text ) => {
-    let res = await fetch( getURL( `api/hashtags/GetPosts/${text}` ) );
+    let res = await fetch( await getURL( `api/hashtags/GetPosts/${text}` ) );
     return res.json();
 };
 
@@ -31,7 +31,7 @@ const createHashtag = async ( model ) => {
         headers: headers
     };
 
-    return fetch( getURL( `api/hashtags/Create` ), options );
+    return fetch( await getURL( `api/hashtags/Create` ), options );
 };
 
 export{
