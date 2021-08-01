@@ -12,7 +12,7 @@ import {
 } from 'components/Post';
 
 import { routes }                   from '_utils';
-import { useGetDetailedPost }       from '_hooks';
+import { useGetDetailedPost, usePostCardStyles }       from '_hooks';
 
 import backapp3                     from 'assets/backapp3.png';
 
@@ -55,6 +55,7 @@ export const PostDetail = ( props ) => {
   const { match, history, ...rest } = props;
   const { id }    = match.params;
   const classes   = useStyles();
+  const postCardClasses = usePostCardStyles();
 
   const [[ready, post], setPost, setReplies] = useGetDetailedPost( id );
 
@@ -74,7 +75,7 @@ export const PostDetail = ( props ) => {
           <strong>Detalle del post</strong>
         </div>
         <div className={classes.cardHolder}>
-          <PostCard post={post} history={history}/>
+          <PostCard classes={postCardClasses} post={post} history={history}/>
           <CreateReplyForm postId={post?.postID} setReplies={setReplies}/>
           {
             post.replies?.map((reply,i)=>{

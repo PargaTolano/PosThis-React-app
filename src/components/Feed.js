@@ -65,7 +65,7 @@ export const Feed = (props) => {
       return copy;
     });
 
-    getFeed(authenticationService.currentUserValue.id)
+    getFeed(0,100)
       .then(handleResponse)
       .then(res=>{
         const { data } = res;

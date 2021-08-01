@@ -7,84 +7,24 @@ import { SignUpModel, LogInModel, SearchRequestModel, UpdateUserViewModel} from 
 
 const getUsers = async () => {
 
-    let headers= {
-        ...authHeader()
-    };
+    let headers= authHeader();
 
     let options ={
         headers
     };
 
-    return fetch( await getURL( 'api/users/Get' ), options );
+    return fetch( await getURL( 'api/users-get' ), options );
 }
 
 const getUser = async ( id ) => {
 
-    let headers= {
-        ...authHeader(),
-        'UserID': authenticationService.currentUserValue.id
-    };
+    let headers= authHeader();
 
     let options ={
         headers
     };
     
-    return fetch( await getURL( `api/users/Get/${id}` ), options );
-};
-
-/**
- * @param {SearchRequestModel} model 
- */
-const getSearch = async ( model ) =>{
-
-    let headers= {
-        ...authHeader()
-    };
-
-    let options ={
-        headers
-    };
-
-    let url = new URL( await getURL( 'api/users/GetSearch'));
-
-    url.searchParams.set( 'UserID', authenticationService.currentUserValue.id );
-    url.searchParams.set( 'SearchPosts', model.searchPosts );
-    url.searchParams.set( 'SearchUsers', model.searchUsers );
-    url.searchParams.set( 'Query', model.query );
-    url.searchParams.set( 'Hashtags', arrayToCSV( model.hashtags ) );
-
-    return fetch( url.href, options );
-};
-
-/**
- * @param {Number} id id del usuario en sesion
- */
-const getFeed = async ( id ) =>{
-    let headers= {
-        ...authHeader()
-    };
-
-    let options ={
-        headers
-    };
-
-    return fetch( await getURL( `api/users/GetFeed/${id}` ), options );
-};
-
-/**
- * @param {Number} id id del usuario en sesion
- */
- const getUserFeed = async ( id ) =>{
-    let headers= {
-        ...authHeader(),
-        'UserID': authenticationService.currentUserValue.id  
-    };
-
-    let options ={
-        headers
-    };
-
-    return fetch( await getURL( `api/users/GetUserPosts/${id}` ), options );
+    return fetch( await getURL( `api/user/${id}` ), options );
 };
 
 /**
@@ -99,10 +39,10 @@ const createUser = async ( model ) => {
     const options = {
         method: 'POST',
         body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/security/CreateUser` ), options );
+    return fetch( await getURL( `api/users-create` ), options );
 };
 
 /**
@@ -117,10 +57,21 @@ const logIn = async ( model ) => {
     const options = {
         method: 'POST',
         body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/security/Login` ), options );
+    return fetch( await getURL( `api/login` ), options );
+};
+
+const logOut = async ( model ) => {
+
+    const headers = authHeader();
+
+    const options = {
+        method: 'POST'
+    };
+
+    return fetch( await getURL( `api/logout` ), options );
 };
 
 /**
@@ -129,24 +80,22 @@ const logIn = async ( model ) => {
  */
 const updateUser = async ( id, model ) =>{
 
-    const headers = {
-        ...authHeader()
-    };
+    const headers = authHeader();
 
-    let fd = new FormData();
-    fd.append('UserName'    , model.userName    );
-    fd.append('Tag'         , model.tag         );
-    fd.append('Email'       , model.email       );
-    fd.append('ProfilePic'  , model.profilePic  );
-    fd.append('CoverPic'    , model.coverPic    );
+    let body = new FormData();
+    body.append('username'    , model.userName    );
+    body.append('tag'         , model.tag         );
+    body.append('email'       , model.email       );
+    body.append('profilePic'  , model.profilePic  );
+    body.append('coverPic'    , model.coverPic    );
 
     const options = {
         method: 'PUT',
-        body: fd,
+        body,
         headers
     };
 
-    return fetch( await getURL( `api/users/Update/${id}` ), options );
+    return fetch( await getURL( `api/users-update/${id}` ), options );
 };
 
 /**
@@ -163,17 +112,15 @@ const deleteUser = async ( id ) =>{
         headers
     };
     
-    return fetch( await getURL( `api/users/Delete/${id}` ), options );
+    return fetch( await getURL( `api/users-delete/${id}` ), options );
 };
 
 export{
     getUsers,
     getUser,
-    getSearch,
-    getFeed,
-    getUserFeed,
     createUser,
     logIn,
+    logOut,
     updateUser,
     deleteUser
 }

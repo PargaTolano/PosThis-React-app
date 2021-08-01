@@ -6,60 +6,45 @@ import LikeViewModel from '_model/LikeViewModel';
 /**
  * @param   {Number} id
  */
-const getLikes= async ( ) => {
-    let res = await fetch( await getURL( `api/likes/Get` ) );
+const getLikes= async ( id ) => {
+    let res = await fetch( await getURL( `api/likes/${id}` ) );
     return res.json();
 };
 
 /**
- * @param   {Number} id
+ * @param {Number | string} userId
+ * @param {Number | string} postId
+ * @returns
  */
- const getLike = async ( id ) => {
-    let res = await fetch( await getURL( `api/likes/Get/${id}` ) );
-    return res.json();
-};
+const createLike = async ( userId, postId ) => {
 
-/**
- * @param {LikeViewModel} model
- */
-const createLike = async ( model ) => {
-
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'POST',
-        body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/likes/Create` ), options );;
+    return fetch( await getURL( `api/likes-create/${userId}/${postId}` ), options );
 };
 
 /**
- * @param {LikeViewModel} model
+ * @param {Number | string} id
  */
- const deleteLike = async ( model ) => {
+ const deleteLike = async ( id ) => {
 
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'DELETE',
-        body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/likes/Delete` ), options );
+    return fetch( await getURL( `api/likes-delete/${id}` ), options );
 };
 
 export{
     getLikes,
-    getLike,
     createLike,
     deleteLike
 }

@@ -6,7 +6,7 @@ import { NavBar   }           from 'components/Inicio';
 import { PostCard }           from 'components/Post';
 import { UserCard }           from 'components/Search';
 
-import { useMakeSearch }      from '_hooks';
+import { useMakeSearch, usePostCardStyles }      from '_hooks';
 
 import backapp3               from 'assets/backapp3.png';
 
@@ -62,6 +62,7 @@ export const SearchResult = ( props ) => {
   const { query } = match.params;
 
   const classes = useStyles();
+  const postCardClasses = usePostCardStyles();
   const [ready, response] = useMakeSearch(query || '');
   
   return (
@@ -83,7 +84,7 @@ export const SearchResult = ( props ) => {
           <strong>Posts/Hashtags Relacionados</strong>
         </div>
         {
-          ready && ( response.posts?.map( post =><PostCard key={post.postId} post={post} history={history}/>) )
+          ready && ( response.posts?.map( post =><PostCard classes={postCardClasses} key={post.postId} post={post} history={history}/>) )
         }
       </div>
     </div>

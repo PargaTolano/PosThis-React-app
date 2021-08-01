@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import PostCard       from 'components/Post/PostCard';
 
+import { usePostCardStyles } from '_hooks';
+
 const useStyles = makeStyles((theme) => ({
   cardHolder: {
     backgroundColor: 'transparent',
@@ -35,6 +37,7 @@ export const PostContainer = (props) => {
 
   const {  posts, history } = props;
   const classes = useStyles();
+  const postCardClasses = usePostCardStyles();
   return (
     <div className={classes.cardHolder}>
       <div component='h4' variant='h2' className={classes.titleBegin}>
@@ -43,7 +46,7 @@ export const PostContainer = (props) => {
       {
         posts 
         &&
-        posts.map(x=><PostCard key={x.postID} post={x} history={history}/>)
+        posts.map(x=><PostCard classes={postCardClasses} key={x.postID} post={x} history={history}/>)
       }
         
     </div>

@@ -26,9 +26,11 @@ import CPostModel     from '_model/CPostModel';
 
 const useStyles = makeStyles((theme) => ({
   form: {
+    position:    'sticky',
+    top:          75,
     background:   'white',
     width:        '100%',
-    maxWidth:     '800px',
+    maxWidth:     '700px',
     height:       '40%',
     padding:      theme.spacing(3),
     borderRadius: 10,  
@@ -37,6 +39,14 @@ const useStyles = makeStyles((theme) => ({
     alignSelf:    'center',
     marginLeft:   'auto',
     marginRight:  'auto',
+    zIndex: 1000,
+    [theme.breakpoints.down('sm')]:{
+      position: 'relative',
+      top: 0,
+    },
+    '&:stuck':{
+      borderRadius: '0px 0px 10px 10px', 
+    }
   },
   cardBtn: {
     display: 'flex',

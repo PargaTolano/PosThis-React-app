@@ -3,112 +3,68 @@ import { authHeader }       from '_helpers'
 import { FollowViewModel }  from '_model';
 
 /**
- * @param   {Number} id
+ * @param   {Number | string} id
  */
 const getFollowers= async ( id ) => {
 
-    const headers = {
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         headers
     };
 
-    return fetch( await getURL( `api/follow/GetFollowers/${id}` ), options );
+    return fetch( await getURL( `api/follows/${id}` ), options );
 }
 
 /**
- * @param   {Number} id
+ * @param   {Number | string} id
  */
 const getFollowing = async ( id ) => {
 
-    const headers = {
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         headers
     };
 
-    return fetch( await getURL( `api/follow/GetFollowing/${id}` ), options );
+    return fetch( await getURL( `api/follows-following/${id}` ), options );
 };
 
 /**
- * @param   {Number} id
+ * @param {Number | string} followedId
  */
-const getFollowersCount = async ( id ) => {
+const createFollow = async ( followedId ) => {
 
-    const headers = {
-        ...authHeader()
-    }
-
-    const options = {
-        headers
-    };
-
-    return fetch( await getURL( `api/follow/GetFollowersCount/${id}` ), options );
-};
-
-/**
- * @param   {Number} id
- */
-const GetFollowingCount = async ( id ) => {
-
-    const headers = {
-        ...authHeader()
-    }
-
-    const options = {
-        headers
-    };
-
-    return fetch( await getURL( `api/follow/GetFollowingCount/${id}` ), options);
-};
-
-/**
- * @param {FollowViewModel} model
- */
-const createFollow = async ( model ) => {
-
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'POST',
-        body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/follow/Create` ), options );
+    return fetch( await getURL( `api/follows-create/${followedId}` ), options );
 };
 
 /**
- * @param {FollowViewModel} model
+ * @param {Number | string} id
  */
-const deleteFollow = async ( model ) =>{
+const deleteFollow = async ( id ) =>{
 
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'DELETE',
-        body: JSON.stringify( model ),
         headers
     };
     
-    return fetch( await getURL( `api/follow/Delete` ), options );
+    return fetch( await getURL( `api/follows-delete/${id}` ), options );
 };
+
+//API ENTRYPOINT CORRECTION DONE
 
 export{
     getFollowers,
     getFollowing,
-    getFollowersCount,
-    GetFollowingCount,
     createFollow,
     deleteFollow
 }

@@ -1,5 +1,5 @@
 {
     "protocol": "http",
-    "host":"pargatolano-001-site1.dtempurl.com",
-    "port":""
+    "host":"localhost",
+    "port":"4000"
 }

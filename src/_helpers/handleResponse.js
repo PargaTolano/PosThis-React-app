@@ -1,12 +1,21 @@
 import { authenticationService } from '_services';
 
+const SafeJsonParse = (text) => {
+    try{
+        return JSON.parse(text)
+    }
+    catch(e){
+        return null;
+    }
+}
+
 export const handleResponse = (response) =>
     response.text().then(text => {
-        const data = text && JSON.parse(text);
+        const data = text && SafeJsonParse(text);
         if (!response.ok) {
             if ([401, 403].indexOf(response.status) !== -1) {
                 authenticationService.logout();
-                window.location.reload(true);
+                window.location.reload();
             }
 
             const error = (data && data.message) || response.statusText;
@@ -14,4 +23,5 @@ export const handleResponse = (response) =>
         }
 
         return data;
-    });
+    })
+    .catch(console.log);
