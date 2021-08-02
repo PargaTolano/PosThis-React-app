@@ -1,7 +1,6 @@
 import React, { useState, useRef }  from 'react';
 import { Link }                     from 'react-router-dom';
 
-
 import {
   Card,
   CardActions,
@@ -18,14 +17,17 @@ import {
   ReplyAll       as ReplyAllIcon,
   Save           as SaveIcon,
   Image          as ImageIcon,
-
+  Edit           as EditIcon,
+  Delete         as DeleteIcon,
+  Cancel         as CancelIcon,
 } from '@material-ui/icons';
 
 import { MediaGrid }                from 'components/Media';
 
-import { handleResponse }  from '_helpers';
+import { handleResponse }           from '_helpers';
 import { authenticationService }    from '_services';
 import { routes, fileToBase64 }     from '_utils';
+
 
 import { 
   updatePost,
@@ -42,9 +44,11 @@ import{
   RepostViewModel
 } from '_model';
 
+import styles from '_styles/PostCard.module.css';
+
 export const PostCard = ( props ) => {
 
-  const { classes, history } = props;
+  const { history } = props;
 
   const [ post, setPost ] = useState( props.post );
 
@@ -239,79 +243,98 @@ export const PostCard = ( props ) => {
   const dateString = new Date(Date.parse( post.date )).toLocaleString();
 
   return (
-    <Card className={classes.root}>
+    <div className={styles.root}>
       {
         (post.isRepost !== 0) &&
-        <Typography variant='body2' className={classes.repostText}>
-          <Link to={routes.getProfile(post.publisherID)} className={classes.repostUserLink}>{post.reposterUserName}</Link> reposted this!
+        <Typography variant='body2' className={styles.repostText}>
+          <Link to={routes.getProfile(post.publisherID)} className={styles.repostUserLink}>{post.reposterUserName}</Link> reposted this!
         </Typography>
       }
       <CardContent>
-          <div className={classes.displayTitle}>
-            <Link to={routes.getProfile(post.publisherID)}>
-              <Avatar src={post.publisherProfilePic} className={classes.avatar}/>
+          <div className={styles.displayTitle}>
+            <Link to={routes.getProfile(post.publisherID)} className={styles.avatarContainer}>
+              <img src={post.publisherProfilePic} className={styles.avatar}/>
             </Link>
-            <Link to={routes.getProfile(post.publisherID)}>
-              <Typography variant='h6' component='h2' className={classes.title}>
-                <strong>{post.publisherUserName} {'@'+post.publisherTag}</strong>
+            <Link to={routes.getProfile(post.publisherID)} className={styles.titleContainer}>
+              <Typography variant='h6' component='h2' className={styles.title}>
+                <strong className={styles.publisher}>{post.publisherUserName} {'@'+post.publisherTag}</strong>
+                <p className={styles.date}>{ dateString.slice( 0, dateString.length - 6 ) } { dateString.slice(dateString.length-3) }</p>
               </Typography>
             </Link>
+            <div  className={styles.displaybtn}>
+              {
+                (authenticationService.currentUserValue.id === post.publisherID)
+                && 
+                <>
+                  <IconButton 
+                    variant='contained' 
+                    color='secondary' 
+                    onClick={onToggleEditMode}
+                  >
+                    { state.editMode ?  <CancelIcon className={styles.actionIcon}/> : <EditIcon className={styles.actionIcon}/>  }
+                  </IconButton>
+                  { 
+                    !state.editMode && <IconButton 
+                      variant='contained' 
+                      color='secondary' 
+                      onClick={onClickDelete}
+                      className={styles.deleteBtn}
+                    >
+                      <DeleteIcon className={styles.actionIcon}/> 
+                    </IconButton>
+                    }
+                  {
+                    (authenticationService.currentUserValue.id === post.publisherID && state.editMode)
+                    && 
+                    <div>
+                      <IconButton onClick={onClickSave}>
+                        <SaveIcon className={styles.saveIcon}/>
+                      </IconButton>
+                    </div>
+                  }
+                </>
+              }
+            </div>
           </div>
-          <p className={classes.date}>{ dateString.slice( 0, dateString.length - 6 ) } { dateString.slice(dateString.length-3) }</p>
-          
+
+
           {
             state.editMode ? 
-            (<textarea className={classes.contentEdit} value={state.content} onChange={onChangeContent}></textarea>)
+            (
+              <textarea className={styles.contentEdit} value={state.content} onChange={onChangeContent}></textarea>
+            )
             :
-            (<Typography variant='body2' component='p' className={state.medias.length !== 0 ? classes.content : classes.contentNoMedia} >{state.originalContent}</Typography>)
+            (
+              <Typography variant='body2' component='p' className={ ( ( state.medias === null && ( state.originalContent.split('\n').length < 5 ) ) ) ? styles.contentNoMedia : styles.content} >
+                {state.originalContent}
+              </Typography>
+            )
           }
           
           {
             state.editMode &&
             <>
-            <input accept='image/*' className={classes.input} type='file' multiple ref={inputFileRef} onChange={onChangeImages}/>
+              <input accept='image/*' className={styles.input} type='file' multiple ref={inputFileRef} onChange={onChangeImages}/>
               <IconButton onClick={onClickFileOpen}>
-                <ImageIcon className={classes.mediaIcon}/>
+                <ImageIcon className={styles.mediaIcon}/>
               </IconButton>
             </>
           }
-          <div className={classes.contMedia}>
+          <div className={styles.contMedia}>
             <MediaGrid media={ state.editMode ? state.medias : state.originalMedias } {...temp}/>
           </div>
 
-          <div  className={classes.displaybtn}>
-          {
-            (authenticationService.currentUserValue.id === post.publisherID)
-            && 
-            <>
-              <Button 
-                variant='contained' 
-                color='secondary' 
-                onClick={onClickDelete}
-                className={classes.deleteBtn}
-              >
-                  Eliminar
-              </Button>
-              <Button 
-                variant='contained' 
-                color='secondary' 
-                onClick={onToggleEditMode}
-              >
-                { state.editMode ? 'Cancelar' : 'Editar' }
-              </Button>
-            </>
-          }
-          </div>
+          
         </CardContent>
 
-      <CardActions disableSpacing className={classes.cardBtn}>
+      <CardActions disableSpacing className={styles.cardBtn}>
 
         {
           (!state.editMode)
           && 
           <div>
             <IconButton onClick={onClickLike}>
-              <FavoriteIcon className={ post.isLiked ? classes.likeIcon : classes.grayIcon }/>
+              <FavoriteIcon className={ post.isLiked ? styles.likeIcon : styles.grayIcon }/>
             </IconButton>
             {post.likeCount}
           </div>
@@ -321,9 +344,9 @@ export const PostCard = ( props ) => {
           (!state.editMode)
           && 
           <div>
-            <Link to={routes.getPost(post.postID || 1)}>
+            <Link to={routes.getPost(post.postID)}>
               <IconButton>
-                <QuestionAnswerIcon className={classes.commentIcon}/>
+                <QuestionAnswerIcon className={styles.commentIcon}/>
               </IconButton>
             </Link>
             {post.replyCount}
@@ -335,24 +358,14 @@ export const PostCard = ( props ) => {
           && 
           <div>
             <IconButton onClick={onClickRepost}>
-              <ReplyAllIcon className={ post.isReposted ? classes.repostIcon : classes.grayIcon }/>
+              <ReplyAllIcon className={ post.isReposted ? styles.repostIcon : styles.grayIcon }/>
             </IconButton>
             {post.repostCount}
           </div>
         }
 
-        {
-          (authenticationService.currentUserValue.id === post.publisherID && state.editMode)
-          && 
-          <div>
-            <IconButton onClick={onClickSave}>
-              <SaveIcon className={classes.saveIcon}/>
-            </IconButton>
-          </div>
-        }
-
       </CardActions>
-    </Card>
+    </div>
   );
 }
 

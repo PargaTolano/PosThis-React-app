@@ -2,11 +2,11 @@ import React                  from 'react';
 
 import { makeStyles }         from '@material-ui/core/styles';
 
-import { NavBar   }           from 'components/Inicio';
+import { NavBar   }           from 'components/Feed';
 import { PostCard }           from 'components/Post';
 import { UserCard }           from 'components/Search';
 
-import { useMakeSearch, usePostCardStyles }      from '_hooks';
+import { useMakeSearch } from '_hooks';
 
 import backapp3               from 'assets/backapp3.png';
 
@@ -62,7 +62,6 @@ export const SearchResult = ( props ) => {
   const { query } = match.params;
 
   const classes = useStyles();
-  const postCardClasses = usePostCardStyles();
   const [ready, response] = useMakeSearch(query || '');
   
   return (
@@ -84,7 +83,7 @@ export const SearchResult = ( props ) => {
           <strong>Posts/Hashtags Relacionados</strong>
         </div>
         {
-          ready && ( response.posts?.map( post =><PostCard classes={postCardClasses} key={post.postId} post={post} history={history}/>) )
+          ready && ( response.posts?.map( post =><PostCard key={post.postId} post={post} history={history}/>) )
         }
       </div>
     </div>

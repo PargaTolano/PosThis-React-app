@@ -17,11 +17,16 @@ export const handleResponse = (response) =>
                 authenticationService.logout();
                 window.location.reload();
             }
-
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
 
         return data;
     })
-    .catch(console.log);
+    .catch( err => {
+        if( !err.message.include('500')){
+            authenticationService.logout();
+            window.location.reload();
+        }
+        return Promise.reject(err);
+    });

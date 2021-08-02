@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     background:     'white',
     width:          '100%',
-    maxWidth:       '600px',
+    maxWidth:       '700px',
     height:         '40%',
     padding:        theme.spacing( 3 ),
     borderRadius:   theme.spacing( 0, 0, 1, 1),  

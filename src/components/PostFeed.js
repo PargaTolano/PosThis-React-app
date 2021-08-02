@@ -3,14 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles }                 from '@material-ui/core/styles';
 import { CircularProgress }           from '@material-ui/core';
 
-import { NavBar, PostContainer }      from 'components/Inicio';
+import { NavBar, PostContainer }      from 'components/Feed';
+
 import { CreatePostForm }             from 'components/Post';
 
 import { handleResponse }             from '_helpers';
-import { authenticationService }      from '_services';
 import { getFeed }                    from '_api';
 
+import { loadingState }               from '_hooks';
+
 import backapp3                       from 'assets/backapp3.png';
+
+
 
 const useStyles = makeStyles((theme) => ({
   Background: {
@@ -41,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     left:           '0',
     width:          '100vw',
     height:         '100vh',
-    zIndex:         '1000',
+    zIndex:         '2000',
     backgroundColor: '#00000055',
   }
 }));
@@ -59,6 +63,8 @@ export const Feed = (props) => {
 
   const loadFeed = ()=>{
     
+    loadingState.set(true);
+
     setState(x=>{
       let copy = {...x};
       copy.loading = true;
@@ -75,8 +81,8 @@ export const Feed = (props) => {
           copy.posts = data;
           return copy;
         });
-      })
-      .catch(console.warn);
+        loadingState.set(false);
+      });
   };
 
   useEffect(() => {
@@ -84,13 +90,6 @@ export const Feed = (props) => {
   },[]);
 
   return (
-  <>
-    {
-      loading &&
-      <div className={classes.loading}>
-        <CircularProgress color='primary'/>
-      </div>
-    }
     <div className={classes.Background}>
       <NavBar history={history}/>
       <div component='h4' variant='h2' className={classes.titleBegin}>
@@ -101,7 +100,6 @@ export const Feed = (props) => {
         (posts.length !== 0) && <PostContainer posts={posts} history={history}/>
       }
     </div>
-  </>
   );
 };
 

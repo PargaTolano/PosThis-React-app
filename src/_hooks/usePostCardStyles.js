@@ -24,30 +24,41 @@ export const usePostCardStyles = makeStyles((theme) => ({
       color:    'white',
       padding:  theme.spacing(2, 4)
     },
+    titleContainer:{
+      display: 'flex',
+      alignItems: 'flex-start',
+    },
     title: {
       display:        'inline-block',
       width:          'auto',
       color:          'white',
       marginLeft:     theme.spacing(2),
       textDecoration: 'none',
+      fontSize: '1em',
       '&:visited':{
         color: 'white',
       }
     },
+    publisher:{
+      '&:hover':{
+      textDecoration: 'underline'
+      }
+    },
     content: {
       color:        'white',
-      marginLeft:   theme.spacing(7),
+      marginTop:    theme.spacing(2),
       marginBottom: theme.spacing(1),
       textIndent:   '0',
-      whiteSpace:   'pre-wrap'
+      whiteSpace:   'pre-line',
+      fontSize:     15
     },
     contentNoMedia:{
       color:        'white',
-      marginLeft:   theme.spacing(7),
+      marginTop:    theme.spacing(2),
       marginBottom: theme.spacing(1),
-      fontSize:     '1.3rem',
+      whiteSpace:   'pre-line',
+      fontSize:     24,
       textIndent:   '0',
-      whiteSpace:   'pre-wrap'
     },
     contentEdit: {
       color:          'white',
@@ -122,14 +133,21 @@ export const usePostCardStyles = makeStyles((theme) => ({
       display: 'none'
     },
     date:{
-      fontSize: '0.7rem',
+      display: 'inline-block',
+      fontSize: 14,
       color:    'gray',
-      display:  'block'
+      display:  'block',
+      margin:   0,
+      '&:hover':{
+        textDecoration: 'underline'
+      }
     },
     grayIcon:{
       color: 'gray'
     },
     avatar:{
+      width:  45,
+      height: 45,
       backgroundColor: '#333333',
       border: '1px solid #f28a9a'
     },

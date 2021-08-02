@@ -21,6 +21,8 @@ import { DialogSignup, SignUp }   from 'components/Registro';
 import { authenticationService }  from '_services';
 import { routes }                 from '_utils';
 
+import { loadingState }           from '_hooks';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -64,9 +66,11 @@ export const Login = (props) => {
   const onSubmit = async e =>{
     e.preventDefault();
 
+    loadingState.set(true);
+
     authenticationService
       .login( username, password )
-      .then( () => history.push( routes.feed ) )
+      .then( () => void history.push( routes.feed ))
       .catch( console.warn );
   };
 

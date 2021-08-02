@@ -1,4 +1,4 @@
-import React,{ useState} from 'react';
+import React,{ useRef, useState} from 'react';
 import {
   AppBar,
   Toolbar,
@@ -10,7 +10,7 @@ import {
   Button,
 } from '@material-ui/core';
 
-import { Link, Redirect }         from 'react-router-dom';
+import { Link }                   from 'react-router-dom';
 import { fade, makeStyles }       from '@material-ui/core/styles';
 import SearchIcon                 from '@material-ui/icons/Search';
 import AccountCircle              from '@material-ui/icons/AccountCircle';
@@ -84,9 +84,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NavBar = (props) => {
+export const NavBar = ( props ) => {
 
-  const { history }= props;
+  const { history } = props;
+
+  const ref = useRef(null);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [query, setQuery]       = useState('');
@@ -99,19 +101,20 @@ export const NavBar = (props) => {
     setAnchorEl(null);
   };
 
-  const onClickProfile = ()=>{
+  const onClickProfile = () => {
     history.push( routes.getProfile( authenticationService.currentUserValue.id ) );
   };
 
-  const handleLogOut = ()=>{
+  const handleLogOut = () => {
     authenticationService.logout();
     history.push( routes.login );
   }
 
-  const onChange = ( e )=>setQuery( e.target.value);
+  const onChange = ( e ) => void setQuery( e.target.value);
 
-  const onSearch = ( e )=>{
+  const onSearch = ( e ) => {
     e.preventDefault();
+    ref.current.blur();
     history.push( routes.getSearch(query));
   };
 
@@ -133,8 +136,9 @@ export const NavBar = (props) => {
               <SearchIcon />
             </div>
 
-            <form onSubmit ={onSearch}>
+            <form  onSubmit ={onSearch}>
               <InputBase
+                ref={ref}
                 placeholder='Buscar…'
                 value={query}
                 classes ={{

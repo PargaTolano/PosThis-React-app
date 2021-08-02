@@ -44,9 +44,6 @@ const useStyles = makeStyles((theme) => ({
       position: 'relative',
       top: 0,
     },
-    '&:stuck':{
-      borderRadius: '0px 0px 10px 10px', 
-    }
   },
   cardBtn: {
     display: 'flex',

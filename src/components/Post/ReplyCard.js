@@ -30,145 +30,19 @@ import { fileToBase64, routes }     from '_utils';
 import { updateReply, deleteReply } from '_api';
 import { UReplyModel }              from '_model';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    maxWidth: '600px',
-    marginTop: theme.spacing(0),
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'white',
-    borderBottomWidth: theme.spacing(0.3),
-    backgroundColor: '#1b2452',
-    borderRadius: theme.spacing( 0 ),
-    boxShadow:        'black 1px 1px 8px',
-  },
-  rootFirst:{
-    width: '100%',
-    maxWidth: '600px',
-    marginTop: theme.spacing(0),
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'white',
-    borderBottomWidth: theme.spacing(0.3),
-    backgroundColor: '#1b2452',
-    borderRadius: theme.spacing( 1, 1, 0, 0 ),
-    boxShadow:        'black 1px 1px 8px',
-  },
-  rootLast:{
-    width: '100%',
-    maxWidth: '600px',
-    marginTop: theme.spacing(0),
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'white',
-    borderBottomWidth: theme.spacing(0),
-    backgroundColor: '#1b2452',
-    borderRadius: theme.spacing( 0, 0, 1, 1 ),
-    boxShadow:        'black 1px 1px 8px',
-  },
-  rootOnly:{
-    width: '100%',
-    maxWidth: '600px',
-    marginTop: theme.spacing(0),
-    borderBottomStyle: 'solid',
-    borderBottomColor: 'white',
-    borderBottomWidth: theme.spacing(0),
-    backgroundColor: '#1b2452',
-    borderRadius: theme.spacing( 2 ),
-    boxShadow:        'black 1px 1px 8px',
-  },
-  media: {
-    height: 140,
-  },
-  title: {
-    color: 'white',
-    marginLeft: theme.spacing(2),
-  },
-  content: {
-    color: 'white',
-    marginLeft: theme.spacing(7),
-    marginBottom: theme.spacing(1),
-  },
-  contentNoMedia:{
-    color:        'white',
-    marginLeft:   theme.spacing(7),
-    marginBottom: theme.spacing(1),
-    fontSize:     '1.3rem',
-    textIndent:   '0',
-    whiteSpace:   'pre-wrap'
-  },
-  contentEdit: {
-    color:          'white',
-    marginBottom:   theme.spacing(1),
-    background:     'transparent',
-    outline:        'none',
-    width:          '100%',
-    height:         '70px',
-    resize:         'none',
-    textDecoration: 'underline',
-    boxSizing:      'border-box',
-    whiteSpace:     'pre-wrap'
-  },
-  input:{
-    display: 'none'
-  },
-  displayTitle:{
-    display: 'inline-flex'
-  },
-  displaybtn:{
-    textAlign: 'right',
-    marginTop: theme.spacing(2),
-  },
-  imgPost:{
-    maxWidth: 450,
-  },
-  contImg:{
-    alignItems: 'center',
-    textAlign: 'center',
-    marginBottom: theme.spacing(1),
-  },
-  contMedia:{
-    display:        'flex',
-    flexDirection:  'column',
-    flexWrap:       'wrap'
-  },
-  date:{
-    fontSize: '0.7rem',
-    color:    'gray',
-    display:  'block'
-  },
-  avatar:{
-    backgroundColor: '#333333',
-    border: '1px solid #f28a9a'
-  },
-  cardBtn: {
-    alignItems:     'center',
-    justifyContent: 'space-around',
-    color:          'white',
-  },
-  saveIcon:{
-    color: '#33eaff',
-  },
-  mediaIcon:{
-    color: '#ea5970'
-  },
-  deleteBtn:{
-    marginRight: theme.spacing(2)
-  }
-}));
-
 export const ReplyCard = ( props ) => {
 
-  const { reply, first, last }    = props;
-  const classes = useStyles();
+  const { classes, reply, first, last }    = props;
   const inputFileRef = useRef();
 
   const [ state, setState ] = useState({
     editMode:         false,
     content:          reply.content,
     originalContent:  reply.content,
-    medias:           reply.medias,
-    originalMedias:   reply.medias,
-    deleted:          [],
-    newMedias:        []
+    media:           reply.media,
+    originalMedia:   reply.media,
+    deleted:         [],
+    newMedia:        []
   });
   const [del, setDel] = useState(false);
 
@@ -176,7 +50,7 @@ export const ReplyCard = ( props ) => {
 
   let cardRootClass;
   if( first && last ){
-    cardRootClass = classes.rootOnly;
+    cardRootClass = classes.rootLast;
   }
   else if( first ){
     cardRootClass = classes.rootFirst;
@@ -195,7 +69,7 @@ export const ReplyCard = ( props ) => {
     let model = new UReplyModel({
       content: state.content,
       deleted: state.deleted,
-      files:   state.newMedias });
+      files:   state.newMedia });
 
     updateReply( reply.replyID, model)
       .then( handleResponse )
@@ -206,8 +80,8 @@ export const ReplyCard = ( props ) => {
           let copy              = {...x};
           copy.editMode         = false;
           copy.originalContent  = data.content;
-          copy.medias           = data.medias;
-          copy.originalMedias   = data.medias;
+          copy.media           = data.media;
+          copy.originalMedia   = data.media;
           return copy;
         });
       })
@@ -225,7 +99,7 @@ export const ReplyCard = ( props ) => {
   const onChangeImages = async e=>{
     let {files} = e.target;
 
-    if( state.medias.length + files.length > 4 )
+    if( state.media.length + files.length > 4 )
       return;
 
     const mediaInfo    = [];
@@ -247,8 +121,8 @@ export const ReplyCard = ( props ) => {
 
     setState( x=>{
       let copy = {...x};
-      copy.medias = [...copy.medias, ...mediaInfo];
-      copy.newMedias = [...copy.newMedias, ...newMediaFiles];
+      copy.media = [...copy.media, ...mediaInfo];
+      copy.newMedia = [...copy.newMedia, ...newMediaFiles];
       return copy;
     });
   };
@@ -261,10 +135,10 @@ export const ReplyCard = ( props ) => {
       copy.editMode = !copy.editMode;
 
       if( copy.editMode === false ){
-        copy.medias     = [...copy.originalMedias];
+        copy.media     = [...copy.originalMedia];
         copy.content    = copy.originalContent;
         copy.deleted    = [];
-        copy.newMedias  = [];
+        copy.newMedia  = [];
       }
       return copy;
     })
@@ -280,10 +154,6 @@ export const ReplyCard = ( props ) => {
       .catch(console.warn);
     }
   };
-
-  if( del ){
-    return <></>
-  }
 
   return (
     <Card className={cardRootClass}>
@@ -308,7 +178,7 @@ export const ReplyCard = ( props ) => {
             state.editMode ? 
             (<textarea className={classes.contentEdit} value={state.content} onChange={onChangeContent}></textarea>)
             :
-            (<Typography variant='body2' component='p' className={state.medias.length !== 0 ? classes.content : classes.contentNoMedia} >{state.originalContent}</Typography>)
+            (<Typography variant='body2' component='p' className={state.media.length !== 0 ? classes.content : classes.contentNoMedia} >{state.originalContent}</Typography>)
           }
           
           {
@@ -322,7 +192,7 @@ export const ReplyCard = ( props ) => {
           }
 
           <div className={classes.contMedia}>
-            <MediaGrid media={ state.medias } {...temp}/>
+            <MediaGrid media={ state.media } {...temp}/>
           </div>
           
           <div  className={classes.displaybtn}>

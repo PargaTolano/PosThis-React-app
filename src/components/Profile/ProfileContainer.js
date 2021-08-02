@@ -4,7 +4,7 @@ import { makeStyles }                 from '@material-ui/core/styles';
 import { CircularProgress }           from '@material-ui/core';
 
 import { ProfileCard }                from 'components/Profile';
-import { PostContainer }              from 'components/Inicio';
+import { PostContainer }              from 'components/Feed';
 import { CreatePostForm }             from 'components/Post';
 
 import { handleResponse }             from '_helpers';

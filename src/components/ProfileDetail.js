@@ -3,7 +3,7 @@ import { Redirect }             from 'react-router-dom';
 
 import { makeStyles }           from '@material-ui/core/styles';
 
-import { NavBar }               from 'components/Inicio';
+import { NavBar }               from 'components/Feed';
 import { ProfileContainer }     from 'components/Profile';
 
 import { routes }               from '_utils';

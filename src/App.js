@@ -16,9 +16,33 @@ import { routes }                                 from '_utils';
 import { history }                                from '_helpers';
 import { authenticationService }                  from '_services';
 
+import { makeStyles }                             from '@material-ui/core/styles';
+import { CircularProgress }                       from '@material-ui/core';
+
+import { loadingState, useLoadingState }          from '_hooks';
+
+const useStyles = makeStyles((theme) => ({
+  loading:{
+    position:       'fixed',
+    display:        'flex',
+    alignItems:     'center',
+    justifyContent: 'center',
+    top:            '0',
+    left:           '0',
+    width:          '100vw',
+    height:         '100vh',
+    zIndex:         '2000',
+    backgroundColor: '#00000055',
+  }
+}));
+
 function App() {
 
+  useLoadingState();
+
   const [ user, setUser ] = useState(null);
+
+  const classes = useStyles();
 
   useEffect(()=>{
     authenticationService
@@ -30,6 +54,12 @@ function App() {
 
   return (
     <div className= 'App'>
+      {
+        loadingState.get &&
+        <div className={classes.loading}>
+          <CircularProgress color='primary'/>
+        </div>
+      }
       <Router>
         <Switch>
           <PrivateRoute exact path={routes.feed}          component={Feed}            {...temp}   />

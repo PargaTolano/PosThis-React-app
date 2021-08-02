@@ -19,14 +19,14 @@ const useStyles = makeStyles((theme)=>({
         borderRadius:   '10px',
         boxShadow:      'black 0px 0px 2px',
         overflow:       'hidden',
-      },
-      previewContainer:{
+    },
+    previewContainer:{
         display:    'inline-block',
         flexGrow:   '1',
         width:      '50%',
         height:     '180px',
-      },
-      previewImage:{
+    },
+    previewImage:{
         postion:    'absolute',
         top:        '0',
         left:       '0',
@@ -34,16 +34,11 @@ const useStyles = makeStyles((theme)=>({
         width:      '100%',
         height:     '100%',
         objectFit:  'cover'
-      },
-      closePreviewIcon:{
+    },
+    closePreviewIcon:{
         position: 'absolute',
         zIndex: 1,
-        root:{
-          '&:hover $icon': {
-            color: 'blue',
-          }
-        }
-      }
+    }
 }));
 
 const GridImage = ( props ) => {

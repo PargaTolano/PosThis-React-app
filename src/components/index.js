@@ -1,4 +1,4 @@
-export * from './Feed';
+export * from './PostFeed';
 export * from './Login';
 export * from './NotFound';
 export * from './PostDetail';
