@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-
 import PostCard       from 'components/Post/PostCard';
 
 import styles from '_styles/PostContainer.module.css'

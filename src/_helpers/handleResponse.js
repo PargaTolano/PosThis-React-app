@@ -1,4 +1,5 @@
 import { authenticationService } from '_services';
+import { makeErrorToast } from '_helpers/makeToast';
 
 const SafeJsonParse = (text) => {
     try{
@@ -18,15 +19,9 @@ export const handleResponse = (response) =>
                 window.location.reload();
             }
             const error = (data && data.message) || response.statusText;
+
             return Promise.reject(error);
         }
 
         return data;
-    })
-    .catch( err => {
-        if( !err.message.include('500')){
-            authenticationService.logout();
-            window.location.reload();
-        }
-        return Promise.reject(err);
     });

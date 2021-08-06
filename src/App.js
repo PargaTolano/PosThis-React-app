@@ -1,6 +1,8 @@
 import React, { useState, useEffect }                         from 'react';
 import { BrowserRouter as Router, Route, Switch }  from 'react-router-dom';
 
+import { toast, ToastContainer } from 'react-toastify';
+
 import { 
   Feed, 
   Login, 
@@ -11,55 +13,69 @@ import {
 } from 'components';
 
 import { PrivateRoute, PublicRoute }              from 'components/Routing';
+import { Loading }                                from 'components/Common';
 
 import { routes }                                 from '_utils';
 import { history }                                from '_helpers';
-import { authenticationService }                  from '_services';
+import { authenticationService, toastService }                  from '_services';
 
-import { makeStyles }                             from '@material-ui/core/styles';
-import { CircularProgress }                       from '@material-ui/core';
+import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-toastify/dist/ReactToastify.minimal.css';
 
-import { loadingState, useLoadingState }          from '_hooks';
-
-const useStyles = makeStyles((theme) => ({
-  loading:{
-    position:       'fixed',
-    display:        'flex',
-    alignItems:     'center',
-    justifyContent: 'center',
-    top:            '0',
-    left:           '0',
-    width:          '100vw',
-    height:         '100vh',
-    zIndex:         '2000',
-    backgroundColor: '#00000055',
-  }
-}));
+import '_styles/ToastStyles.css';
 
 function App() {
 
-  useLoadingState();
-
   const [ user, setUser ] = useState(null);
 
-  const classes = useStyles();
-
   useEffect(()=>{
-    authenticationService
+
+    let toastSubs = 
+        toastService
+            .toast$
+            .subscribe(({content, type}) => 
+              {
+                toast[type]( content, {
+                  position: 'top-left',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                })
+              }
+            );
+
+    let authSubs = 
+          authenticationService
               .currentUser
               .subscribe(x=>setUser(x));
+
+
+    return ()=>{
+      toastSubs.unsubscribe();
+      authSubs.unsubscribe();
+    };
+
   },[]);
   
   const temp = { history, user };
 
   return (
     <div className= 'App'>
-      {
-        loadingState.get &&
-        <div className={classes.loading}>
-          <CircularProgress color='primary'/>
-        </div>
-      }
+      <Loading/>
+      <ToastContainer
+        position="top-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Router>
         <Switch>
           <PrivateRoute exact path={routes.feed}          component={Feed}            {...temp}   />
@@ -70,6 +86,7 @@ function App() {
           <Route        exact path={'*'}                  component={NotFound}        {...temp}   />
         </Switch>
       </Router>
+      
     </div>
   );
 }

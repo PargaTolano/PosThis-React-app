@@ -97,27 +97,25 @@ export const ProfileCard = ( props ) => {
   const { user, setUser } = props;
   const classes = useStyles();
 
-  const OnClickFollowButton = ()=>{
+  const OnClickFollowButton = async ()=>{
     const model = new FollowViewModel({
       followedID: user.id,
       followerID: authenticationService.currentUserValue.id });
     
     if( user.isFollowed ){
-      deleteFollow( model )
-      .then( handleResponse )
-      .then( res =>{
-        const { data } = res;
-        setUser( data );
-      })
-      .catch( console.warn );
+      const {data:responseData, err} = await deleteFollow( user.id );
+
+      if ( err !== null ) return;
+
+      const {data} = responseData;
+      setUser(data);
     }else{
-      createFollow( model )
-      .then( handleResponse )
-      .then( res =>{
-        const { data } = res;
-        setUser( data );
-      })
-      .catch( console.warn );
+      const {data:responseData, err} = await createFollow( user.id );
+
+      if ( err !== null ) return;
+
+      const {data} = responseData;
+      setUser(data);
     }
   };
 
@@ -131,7 +129,7 @@ export const ProfileCard = ( props ) => {
           <div className={classes.contImg}>
             <img className={classes.profilePicture} src={ user.profilePicPath || profilePicPlaceholder }/>
             <Typography variant='h6' component='h2' className={classes.title}>
-              <strong>{user.userName} {'@'+user.tag}</strong>
+              <strong>{user.username} {'@'+user.tag}</strong>
             </Typography>
           </div>
         </CardContent>

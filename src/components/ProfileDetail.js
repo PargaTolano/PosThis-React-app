@@ -30,7 +30,7 @@ export const ProfileDetail = (props) => {
 
   const [[ready, user], setUser] = useGetUserProfile( id || '' );
 
-  if( id == 'undefined' || id === undefined || id === null || id === '' ){
+  if( id == 'undefined' || id === undefined || id === null || id === ''|| (ready && user === null ) ){
     return (<Redirect to={routes.feed}/>);
   }
 

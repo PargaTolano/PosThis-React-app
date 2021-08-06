@@ -1,5 +1,5 @@
 import {  getURL  }     from '_config';
-import { authHeader }   from '_helpers';
+import { authHeader, requestWrapper }   from '_helpers';
 
 import RepostViewModel  from '_model/RepostViewModel';
 
@@ -7,45 +7,37 @@ import RepostViewModel  from '_model/RepostViewModel';
 /**
  * @param   {Number} id
  */
-const getReposts= async ( ) => {
-    return fetch( await getURL( `api/reposts/Get` ) );
-};
+const getReposts = async (id) =>  requestWrapper( async ()=> fetch( await getURL( `api/reposts/${id}` ) ) );
 
 /**
- * @param {RepostViewModel} model
+ * @param {Number | String} userId
+ * @param {Number | String} postId
  */
-const createRepost = async ( model ) => {
+const createRepost = async ( userId, postId ) => {
 
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'POST',
-        body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/reposts/Create` ), options );
+    return requestWrapper( async () =>  fetch( await getURL( `api/reposts-create/${userId}/${postId}` ), options ) );
 };
 
 /**
- * @param {CRepostModel} model
+ * @param {Number | String} id
  */
- const deleteRepost = async ( model ) => {
+ const deleteRepost = async ( id ) => {
 
-    const headers = {
-        ...authHeader()
-    }
+    const headers = authHeader();
 
     const options = {
         method: 'DELETE',
-        body: JSON.stringify( model ),
-        headers: headers
+        headers
     };
 
-    return fetch( await getURL( `api/reposts/Delete/` ), options );
+    return requestWrapper( async () =>  fetch( await getURL( `api/reposts-delete/${id}` ), options ) );
 };
 
 export{

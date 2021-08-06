@@ -1,96 +1,48 @@
 import React                        from 'react';
 import { Redirect }                 from 'react-router-dom';
 
-import { makeStyles }               from '@material-ui/core/styles';
-
 import { NavBar }                   from 'components/Feed';
 
 import {
-  PostCard,
-  ReplyCard, 
-  CreateReplyForm
+  PostCard
 } from 'components/Post';
 
-import { routes }                   from '_utils';
 import { 
-  useGetDetailedPost,
-  useReplyCardStyles,
-  useMediaGridStyles 
-} from '_hooks';
+  CreateReplyForm,
+  ReplyContainer
+} from 'components/Reply';
 
-import backapp3                     from 'assets/backapp3.png';
+import { routes }                                 from '_utils';
+import { useGetDetailedPost                       } from '_hooks';
 
-const useStyles = makeStyles( ( theme ) => ({
-  Background: {
-    backgroundImage: `url('${backapp3}')`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '100vh',
-  },
-  cardHolder: {
-    backgroundColor: 'transparent',
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  titleBegin:{
-    postition: 'sticky',
-    display: 'inline-block',
-    top: '0',
-    color: 'white',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontSize: 30,
-    width: '100%',
-    paddingBottom: theme.spacing(3),
-    textAlign: 'center',
-    flexDirection:'column',
-  },
-}));
+import styles from '_styles/PostDetail.module.css';
 
 export const PostDetail = ( props ) => {
   
   const { match, history, ...rest } = props;
   const { id }    = match.params;
 
-  const classes   = useStyles();
-  const replyCardClasses  = useReplyCardStyles();
+  const [ready, post] = useGetDetailedPost( id );
 
-  const [[ready, post], setPost, setReplies] = useGetDetailedPost( id );
-
-  if( id == 'undefined' || id === undefined || id === null || id === '' ){
+  if( id == 'undefined' || id === undefined || id === null || id === '' || (ready && post === null) ){
     return (<Redirect to={routes.feed}/>);
   }
 
   return (
-    <div className={classes.Background}>
+    <div className={styles.background}>
       <NavBar history={history}/>
 
     {
       (ready && post )
       &&
       <>
-        <div component='h4' variant='h2' className={classes.titleBegin}>
+        <div component='h4' variant='h2' className={styles.titleBegin}>
           <strong>Detalle del post</strong>
         </div>
-        <div className={classes.cardHolder}>
+        <div className={styles.cardHolder}>
           <PostCard post={post} history={history}/>
-          <CreateReplyForm postId={post?.postID} setReplies={setReplies}/>
-          {
-            post.replies?.map((reply,i)=>{
-              
-              let first = i === 0;
-              let last  = i === post.replies.length - 1;
-              
-              return <ReplyCard classes={replyCardClasses} key={reply.replyID} reply={reply} first={first} last={last} />;
-            })
-          }
+          <CreateReplyForm postId={post?.postID}/>
+          <ReplyContainer id={post.postID}/>
         </div>
       </>
     }

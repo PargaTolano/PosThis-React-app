@@ -22,6 +22,7 @@
 }
 
 .repostText{
+    position: relative;
     color:    white;
     padding:  10px 20px
 }
@@ -85,6 +86,10 @@
 
 .repostIcon{
     color: #f28a9a;
+}
+
+.cancelIcon{
+    color: #ea5970;
 }
 
 .saveIcon{
@@ -186,8 +191,10 @@
 }
 
 .repostUserLink{
-    color: white;
-    text-decoration: none;
+    position:           relative;
+    color:              white;
+    text-decoration:    none;
+    cursor:             pointer;
 }
 
 .repostUserLink:visited{
@@ -195,7 +202,13 @@
 }
 
 .repostUserLink:hover{
-    color: #ea5970;
+    text-decoration: underline;
+}
+
+.repostedIcon{
+    position: absolute;
+    right: -10px;
+    transform: scale(0.6) translate(100%, -20%);
 }
 
 .deleteBtn{

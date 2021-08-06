@@ -5,8 +5,8 @@ export class SignUpModel{
     email;
     password;
 
-    constructor({userName, tag, email, password}){
-        this.userName = userName;
+    constructor({username, tag, email, password}){
+        this.username = username;
         this.tag = tag;
         this.email = email;
         this.password = password;

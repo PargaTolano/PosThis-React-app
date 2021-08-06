@@ -24,66 +24,7 @@ import { createPost }             from '_api';
 
 import CPostModel     from '_model/CPostModel';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
-    position:    'sticky',
-    top:          75,
-    background:   'white',
-    width:        '100%',
-    maxWidth:     '700px',
-    height:       '40%',
-    padding:      theme.spacing(3),
-    borderRadius: 10,  
-    alignItems:   'center',
-    justifySelf:  'center',
-    alignSelf:    'center',
-    marginLeft:   'auto',
-    marginRight:  'auto',
-    zIndex: 1000,
-    [theme.breakpoints.down('sm')]:{
-      position: 'relative',
-      top: 0,
-    },
-  },
-  cardBtn: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    color: 'white',
-    alignSelf:'center',
-  },
-  submit: {
-    order: 0,
-    width: '20%',
-    [theme.breakpoints.down('sm')]:{
-      order: 1,
-      width: '100%',
-      flexGrow: '1',
-      flexShrink: '0',
-      flexBasis: 'auto',
-    }
-  },
-  imageIcon: {
-    order: 1,
-    [theme.breakpoints.down('sm')]:{
-      order: 0,
-      flexGrow: '1',
-      flexShrink: '0',
-      flexBasis: 'auto',
-    }
-  },
-  titleForm: {
-    justifyContent: 'space-around',
-    color: theme.palette.primary.dark ,
-    alignSelf:'center',
-    color:'#ea5970',
-  },
-  input: {
-    display: 'none',
-  },
-  
-}));
+import styles from '_styles/PostForm.module.css';
 
 export const CreatePostForm = (props) => {
 
@@ -103,8 +44,6 @@ export const CreatePostForm = (props) => {
   }, [images, content])
 
   const inputFileRef = useRef(null);
-  
-  const classes = useStyles();
   
   const onSubmit = async ( e )=>{
     e.preventDefault();
@@ -144,8 +83,8 @@ export const CreatePostForm = (props) => {
 
   return (
 
-    <form className={classes.form} noValidate onSubmit={onSubmit}>
-        <div component='h4' variant='h2' className={classes.titleForm}>
+    <form className={styles.form} noValidate onSubmit={onSubmit}>
+        <div component='h4' variant='h2' className={styles.titleForm}>
           <strong>Nuevo PosThis!</strong>
         </div>
         <TextField
@@ -160,19 +99,20 @@ export const CreatePostForm = (props) => {
           autoComplete='postContent'
           autoFocus
           value = {content}
-          className={classes.postContent}
+          className={styles.postContent}
           onChange ={onChangeContent}
         />
 
       <FormMediaGrid images={images} setImages={setImages}/>
-      <div className = {classes.cardBtn}>
+      <div className = {styles.cardBtn}>
       
         <Button
           type='submit'
           fullWidth
           variant='contained'
           color='primary'
-          className={classes.submit}
+          style={{width: 200}}
+          className={styles.submit}
           disabled = {!validation.validated}
         >
           Publicar
@@ -180,7 +120,7 @@ export const CreatePostForm = (props) => {
           
         <input
           accept='image/*' 
-          className={classes.input} 
+          className={styles.input} 
           type='file' 
           multiple 
           ref={inputFileRef} 
@@ -188,7 +128,7 @@ export const CreatePostForm = (props) => {
         />
         <label 
           htmlFor='icon-button-file' 
-          className={classes.imageIcon}
+          className={styles.imageIcon}
         >
           <IconButton 
             color='primary' 
@@ -196,7 +136,7 @@ export const CreatePostForm = (props) => {
             component='span' 
             onClick={mediaBtnOnClick}
           >
-            <ImageIcon className={classes.imageIcon}/>
+            <ImageIcon className={styles.imageIcon}/>
           </IconButton>
         </label>
         

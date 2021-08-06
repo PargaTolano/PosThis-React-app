@@ -1,6 +1,6 @@
 import { BehaviorSubject }  from 'rxjs';
 import { authTokenKey }     from '_utils';
-import { handleResponse }   from '_helpers';
+import { toastService } from '_services'
 
 import { logIn }            from '_api/users';
 
@@ -18,13 +18,18 @@ function login( username, password ) {
     let data = { username, password};
 
     return logIn(data)
-        .then(handleResponse)
-        .then(res => {
-            let user = res.data;
-            localStorage.setItem( authTokenKey, JSON.stringify( user ) );
-            currentUserSubject.next( user );
+        .then(({data, err}) => {
+
+            if( err ){
+                toastService.makeToast( err.message, 'error');
+                return null;
+            }
+
+            let {data:userData} = data;
+            localStorage.setItem( authTokenKey, JSON.stringify( userData ) );
+            currentUserSubject.next( userData );
             
-            return user;
+            return data;
         });
 }
 

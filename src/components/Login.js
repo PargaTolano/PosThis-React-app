@@ -18,7 +18,7 @@ import PersonPinIcon              from '@material-ui/icons/PersonPin';
 
 import { DialogSignup, SignUp }   from 'components/Registro';
 
-import { authenticationService }  from '_services';
+import { authenticationService, toastService }  from '_services';
 import { routes }                 from '_utils';
 
 import { loadingState }           from '_hooks';
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Login = (props) => {
 
-  const { match, history} = props;
+  const { history} = props;
 
   const classes = useStyles();
 
@@ -70,8 +70,16 @@ export const Login = (props) => {
 
     authenticationService
       .login( username, password )
-      .then( () => void history.push( routes.feed ))
-      .catch( console.warn );
+      .then( data => {
+        
+        loadingState.set(false);
+
+        if ( data === null)
+          return;
+
+        toastService.makeToast( data.message, 'success')
+        history.push( routes.feed );
+      })
   };
 
   return (

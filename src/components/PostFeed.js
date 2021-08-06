@@ -7,14 +7,13 @@ import { NavBar, PostContainer }      from 'components/Feed';
 
 import { CreatePostForm }             from 'components/Post';
 
-import { handleResponse }             from '_helpers';
+import { PaginationElement }          from 'components/Common';
+
 import { getFeed }                    from '_api';
 
 import { loadingState }               from '_hooks';
 
 import backapp3                       from 'assets/backapp3.png';
-
-
 
 const useStyles = makeStyles((theme) => ({
   Background: {
@@ -50,44 +49,57 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const limit = 5;
+
 export const Feed = (props) => {
 
   const { history } = props;
   
   const classes = useStyles();
 
-  const [{ posts, loading }, setState] = useState({
-    posts: [],
-    loading: false
-  });
+  const [posts, setPosts] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [last, setLast]   = useState(0);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const loadFeed = ()=>{
-    
-    loadingState.set(true);
 
-    setState(x=>{
-      let copy = {...x};
-      copy.loading = true;
-      return copy;
+    getFeed(last, limit)
+    .then( ({data:responseData, err}) =>{
+
+      if ( err !== null )
+        return;
+
+      const { data } = responseData;
+
+      setHasFetched(true);
+
+      if ( data !== null)
+        setPosts([...posts,...data]);
     });
-
-    getFeed(0,100)
-      .then(handleResponse)
-      .then(res=>{
-        const { data } = res;
-        setState(x=>{
-          let copy = {...x};
-          copy.loading = false;
-          copy.posts = data;
-          return copy;
-        });
-        loadingState.set(false);
-      });
   };
 
   useEffect(() => {
     loadFeed();
   },[]);
+
+  const onSrolledToBottom = ()=>{
+    getFeed(last, limit)
+    .then( ({data:responseData, err}) =>{
+      
+      loadingState.set(false);
+      if ( err !== null )
+        return;
+
+      const { data } = responseData;
+      
+      if ( data === null) return;
+
+      setLast(data.length);
+      setTotal(total + data.length);
+      setPosts([...posts,...data]);
+    });
+  };
 
   return (
     <div className={classes.Background}>
@@ -97,8 +109,16 @@ export const Feed = (props) => {
       </div>
       <CreatePostForm afterUpdate={loadFeed}/>
       {
-        (posts.length !== 0) && <PostContainer posts={posts} history={history}/>
+        (posts?.length !== 0) && <PostContainer posts={posts} history={history}/>
       }
+      <PaginationElement
+        name            = 'posts'
+        hasFetched      = {hasFetched}
+        total           = {total}
+        last            = {last}
+        limit           = {limit}
+        onIntersection  = {onSrolledToBottom}
+      />
     </div>
   );
 };

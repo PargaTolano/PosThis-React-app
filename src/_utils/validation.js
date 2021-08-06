@@ -22,18 +22,18 @@ const validateLogin = ({userName, password})=>{
     return validation;
 };
 
-const validateSignup = ( {userName, tag, email, password} ) =>{
+const validateSignup = ( {username, tag, email, password} ) =>{
 
     const validation = {
-        userName:   true,
+        username:   true,
         tag:        true,
         email:      true,
         password:   true,
         validated:  true,
     };
 
-    if ( !userNameRegex .test( userName || '' ) ){
-        validation.userName     = false;
+    if ( !userNameRegex .test( username || '' ) ){
+        validation.username     = false;
         validation.validated    = false;
     }
 

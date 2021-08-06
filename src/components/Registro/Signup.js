@@ -56,14 +56,14 @@ export const SignUp = (props)=>{
   const classes = useStyles();
 
   const [state, setState] = useState({
-      userName: '',
+      username: '',
       tag: '',
       email: '',
       password:''
   });
 
   const [ validation, setValidation] = useState({
-    userName:   false,
+    username:   false,
     tag:        false,
     email:      false,
     password:   false,
@@ -80,6 +80,8 @@ export const SignUp = (props)=>{
   const onSubmit = (e) =>{
     
     e.preventDefault();
+
+    if( !validation.validated ) return;
 
     const model = new SignUpModel(state);
 
@@ -116,7 +118,7 @@ export const SignUp = (props)=>{
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete='fname'
-                name='userName'
+                name='username'
                 variant='outlined'
                 required
                 fullWidth
@@ -125,7 +127,7 @@ export const SignUp = (props)=>{
                 onChange = {OnChangeInput}
               />
               {
-                !validation.userName
+                !validation.username
                 && 
                 <Typography variant='body2' className={classes.fieldWarning}>
                 * Nombre de usuario no valido

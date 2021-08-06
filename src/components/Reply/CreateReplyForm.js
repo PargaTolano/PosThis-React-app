@@ -15,7 +15,7 @@ import {
 import { FormMediaGrid }            from 'components/Media';
 
 import { handleResponse }           from '_helpers';
-import { authenticationService }    from '_services';
+import { authenticationService, replyService }    from '_services';
 import { 
   fileToBase64,
    validateCreateAndUpdatePost 
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const CreateReplyForm = (props) => {
 
-  const {postId, setReplies} = props;
+  const {postId} = props;
   
   const [images, setImages]   = useState( [] );
   const [content, setContent] = useState( '' );
@@ -117,7 +117,7 @@ export const CreateReplyForm = (props) => {
             let { data } = res;
             setImages ([]);
             setContent('');
-            setReplies( data );
+            replyService.getPostReplie(postId);
           })
           .catch( console.warn );
   };

@@ -46,7 +46,7 @@ export const MediaGrid = ( props ) => {
 
   const { media, ...temp } = props;
 
-  if ( media === null || media?.length === 0 )
+  if ( media === null || media === undefined || media?.length === 0 )
     return null;
 
   const n = media?.length;

@@ -1,10 +1,7 @@
-import {  getURL  }              from '_config';
-import { authHeader }            from '_helpers';
-import { authenticationService } from '_services';
+import {  getURL  }                         from '_config';
+import { authHeader, requestWrapper }       from '_helpers';
 
-const getPosts = async () => {
-    return fetch( await getURL( `api/posts` ) );
-}
+const getPosts = async () => requestWrapper( async ()=> fetch( await getURL( `api/posts` ) ) );
 
 /**
  * @param {Number | String} id 
@@ -18,7 +15,7 @@ const getPost = async ( id ) => {
         headers
     };
 
-    return fetch( await getURL( `api/post/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/post/${id}` ), options ) );
 };
 
 /**
@@ -41,7 +38,7 @@ const createPost = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/posts-create` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/posts-create` ), options ) );
 };
 
 /**
@@ -71,8 +68,7 @@ const updatePost = async ( id, model ) =>{
         body: fd,
         headers
     };
-
-    return fetch( await getURL( `api/posts-update/${id}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/posts-update/${id}` ), options ) );
 };
 
 /**
@@ -84,7 +80,7 @@ const deletePost = async ( id ) =>{
         headers: authHeader()
     };
     
-    return fetch( await getURL( `api/posts-delete/${id}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/posts-delete/${id}` ), options ) );
 };
 
 const getFeed = async ( offset, limit ) => {
@@ -93,8 +89,8 @@ const getFeed = async ( offset, limit ) => {
     let options ={
         headers
     };
-
-    return fetch( await getURL( `api/posts-feed/${offset}/${limit}` ), options );
+    
+    return requestWrapper( async () => fetch( await getURL( `api/posts-feed/${offset}/${limit}` ), options ) );
 };
 
 const getUserFeed = async ( id, offset, limit ) => {
@@ -104,7 +100,7 @@ const getUserFeed = async ( id, offset, limit ) => {
         headers
     };
 
-    return fetch( await getURL( `api/posts-feed/${id}/${offset}/${limit}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/posts-feed/${id}/${offset}/${limit}` ), options ) );
 };
 
 export{

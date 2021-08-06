@@ -1,5 +1,5 @@
 import {  getURL  }     from '_config';
-import { authHeader }   from '_helpers';
+import { authHeader, requestWrapper }   from '_helpers';
 
 import { CReplyModel, UReplyModel } from '_model';
 
@@ -8,13 +8,13 @@ import { CReplyModel, UReplyModel } from '_model';
  */
 const getReplies = async ( id ) => {
 
-    const headers = authHeader()
+    const headers = authHeader();
 
     const options = {
         headers
     };
 
-    return fetch( await getURL( `api/replies/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/replies/${id}` ), options ) );
 };
 
 /**
@@ -25,8 +25,6 @@ const createReply = async ( model ) => {
     const headers = authHeader();
 
     let fd = new FormData();
-    fd.append('userID', model.userID    );
-    fd.append('postID', model.postID    );
     fd.append('content', model.content  );
 
     for( let f of model.files ){
@@ -39,7 +37,7 @@ const createReply = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/replies-create` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/replies-create/${model.userID}/${model.postID}` ), options ) );
 };
 
 /**
@@ -67,7 +65,7 @@ const createReply = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/replies-update/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/replies-update/${id}` ), options ) );
 };
 
 /**
@@ -82,7 +80,7 @@ const createReply = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/replies-delete/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/replies-delete/${id}` ), options ) );
 };
 
 export{

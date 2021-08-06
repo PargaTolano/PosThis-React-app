@@ -2,7 +2,6 @@ import { useState, useEffect }  from 'react';
 import { getSearch }            from '_api';
 import { handleResponse }       from '_helpers';
 
-import { SearchRequestModel }   from '_model';
 import { loadingState }         from '_hooks';
 
 export const useMakeSearch = ( query ) =>{

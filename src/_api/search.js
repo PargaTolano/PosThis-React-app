@@ -1,6 +1,6 @@
 import {  getURL  }                 from '_config';
 import { arrayToCSV }               from '_utils';
-import { authHeader }               from '_helpers';
+import { authHeader, requestWrapper }               from '_helpers';
 import { authenticationService }    from '_services';
 
 import { SearchRequestModel }       from '_model';
@@ -29,7 +29,11 @@ const getSearch = async (
     url.searchParams.set( 'search-users', searchUsers );
     url.searchParams.set( 'query', query );
 
-    return fetch( url.href, options );
+    
+    return requestWrapper( async () =>  fetch( url.href, options ) );
 }
+
+
+//TODO MANAGE DATAMODEL RETURNED WITH REQUEST WRAPPER
 
 export{ getSearch }

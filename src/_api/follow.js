@@ -1,5 +1,5 @@
 import {  getURL  }         from '_config';
-import { authHeader }       from '_helpers'
+import { authHeader, requestWrapper }       from '_helpers'
 import { FollowViewModel }  from '_model';
 
 /**
@@ -13,7 +13,7 @@ const getFollowers= async ( id ) => {
         headers
     };
 
-    return fetch( await getURL( `api/follows/${id}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/follows/${id}` ), options ));
 }
 
 /**
@@ -26,8 +26,8 @@ const getFollowing = async ( id ) => {
     const options = {
         headers
     };
-
-    return fetch( await getURL( `api/follows-following/${id}` ), options );
+    
+    return requestWrapper( async () => fetch( await getURL( `api/follows-following/${id}` ), options ));
 };
 
 /**
@@ -41,8 +41,8 @@ const createFollow = async ( followedId ) => {
         method: 'POST',
         headers
     };
-
-    return fetch( await getURL( `api/follows-create/${followedId}` ), options );
+    
+    return requestWrapper( await getURL( `api/follows-create/${followedId}` ), options );
 };
 
 /**
@@ -57,7 +57,7 @@ const deleteFollow = async ( id ) =>{
         headers
     };
     
-    return fetch( await getURL( `api/follows-delete/${id}` ), options );
+    return requestWrapper( await getURL( `api/follows-delete/${id}` ), options );
 };
 
 //API ENTRYPOINT CORRECTION DONE

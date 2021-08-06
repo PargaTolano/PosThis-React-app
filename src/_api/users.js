@@ -1,7 +1,6 @@
 import {  getURL  }                 from '_config';
 import { arrayToCSV }               from '_utils';
-import { authHeader }               from '_helpers';
-import { authenticationService }    from '_services';
+import { authHeader, requestWrapper }               from '_helpers';
 
 import { SignUpModel, LogInModel, SearchRequestModel, UpdateUserViewModel} from '_model';
 
@@ -13,7 +12,7 @@ const getUsers = async () => {
         headers
     };
 
-    return fetch( await getURL( 'api/users-get' ), options );
+    return requestWrapper( async ()=> fetch( await getURL( 'api/users-get' ), options ) );
 }
 
 const getUser = async ( id ) => {
@@ -24,7 +23,7 @@ const getUser = async ( id ) => {
         headers
     };
     
-    return fetch( await getURL( `api/user/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/user/${id}` ), options ) );
 };
 
 /**
@@ -42,7 +41,7 @@ const createUser = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/users-create` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/users-create` ), options ) );
 };
 
 /**
@@ -60,7 +59,7 @@ const logIn = async ( model ) => {
         headers
     };
 
-    return fetch( await getURL( `api/login` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/login` ), options ) );
 };
 
 const logOut = async ( model ) => {
@@ -68,10 +67,11 @@ const logOut = async ( model ) => {
     const headers = authHeader();
 
     const options = {
-        method: 'POST'
+        method: 'POST',
+        headers
     };
 
-    return fetch( await getURL( `api/logout` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/logout` ), options ) );
 };
 
 /**
@@ -95,24 +95,21 @@ const updateUser = async ( id, model ) =>{
         headers
     };
 
-    return fetch( await getURL( `api/users-update/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/users-update/${id}` ), options ) );
 };
 
 /**
  * @param   {Number} id
  */
 const deleteUser = async ( id ) =>{
-    const headers = {
-        'Content-Type': 'application/json',
-        ...authHeader()
-    };
+    const headers = authHeader();
 
     const options = {
         method: 'DELETE',
         headers
     };
     
-    return fetch( await getURL( `api/users-delete/${id}` ), options );
+    return requestWrapper( async ()=> fetch( await getURL( `api/users-delete/${id}` ), options ) );
 };
 
 export{

@@ -1,23 +1,25 @@
 import { BehaviorSubject }  from 'rxjs';
-import { authTokenKey }     from '_utils';
 import { handleResponse }   from '_helpers';
 
-import { getReplies } from '_api/replies';
+import { getReplies }       from '_api/replies';
 
-const replySubject = new BehaviorSubject( {} );
+const replySubject = new BehaviorSubject( null );
 
-export const postService = {
+export const replyService = {
     getPostReplies,
     reply$: replySubject.asObservable(),
 };
 
-function getPostReplies(id){
-    return getReplies(id)
-        .then(handleResponse)
-        .then(res=>{
-            const {data} = res;
-            replySubject.next(data);
+async function getPostReplies(id){
 
-            return data;
-        })
+    const {data:responseData, err} = await getReplies( id );
+
+    if ( err !== null ) return;
+
+    const {data} = responseData;
+
+    if ( data !== null )
+    replySubject.next(data);
+    
+    return data;
 }

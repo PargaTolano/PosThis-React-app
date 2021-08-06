@@ -8,21 +8,21 @@ export const useGetDetailedPost = ( id ) =>{
     const [ state, setState ] =  useState([false, null]);
 
     useEffect(()=>{
-        getPost( id )
-        .then ( handleResponse )
-        .then ( res => setState( [ true, res.data ] ) )
-        .catch( res => setState( [ true, null     ] ) );
+        (async()=>{
+            const {data:responseData, err} = await getPost( id );
+
+            if ( err !== null){
+                setState( [ true, null ] );
+                return;
+            }
+
+            const {data} = responseData;
+            setState([true, data]);
+        })();
+
     }, [id]);
-
-    const setPost = ( post )=>{
-        setState( [true, post ]);
-    };
-
-    const setReplies = ( replies )=>{
-        setState( [true, {...state, replies }]);
-    };
-
-    return [ state, setPost, setReplies];
+    
+    return state;
 };
 
 export default useGetDetailedPost;

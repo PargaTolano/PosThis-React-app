@@ -1,15 +1,12 @@
 import {  getURL  }     from '_config';
-import { authHeader } from '_helpers';
+import { authHeader, requestWrapper } from '_helpers';
 
 import LikeViewModel from '_model/LikeViewModel';
 
 /**
  * @param   {Number} id
  */
-const getLikes= async ( id ) => {
-    let res = await fetch( await getURL( `api/likes/${id}` ) );
-    return res.json();
-};
+const getLikes= async ( id ) => requestWrapper( async ()=> fetch( await getURL( `api/likes/${id}` ) ) );
 
 /**
  * @param {Number | string} userId
@@ -25,7 +22,7 @@ const createLike = async ( userId, postId ) => {
         headers
     };
 
-    return fetch( await getURL( `api/likes-create/${userId}/${postId}` ), options );
+    return requestWrapper( async ()=> fetch ( await getURL(  `api/likes-create/${userId}/${postId}` ), options ) );
 };
 
 /**
@@ -40,7 +37,7 @@ const createLike = async ( userId, postId ) => {
         headers
     };
 
-    return fetch( await getURL( `api/likes-delete/${id}` ), options );
+    return requestWrapper( async () => fetch (await getURL( `api/likes-delete/${id}` ), options ) );
 };
 
 export{

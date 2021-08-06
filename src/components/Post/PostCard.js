@@ -2,13 +2,10 @@ import React, { useState, useRef }  from 'react';
 import { Link }                     from 'react-router-dom';
 
 import {
-  Card,
   CardActions,
   CardContent,
   Typography,
   IconButton,
-  Button,
-  Avatar,
 } from '@material-ui/core';
 
 import {
@@ -28,7 +25,6 @@ import { handleResponse }           from '_helpers';
 import { authenticationService }    from '_services';
 import { routes, fileToBase64 }     from '_utils';
 
-
 import { 
   updatePost,
   deletePost,
@@ -38,11 +34,7 @@ import {
   deleteRepost
 } from '_api';
 
-import{
-  UPostModel,
-  LikeViewModel,
-  RepostViewModel
-} from '_model';
+import { UPostModel, RepostViewModel } from '_model';
 
 import styles from '_styles/PostCard.module.css';
 
@@ -98,7 +90,7 @@ export const PostCard = ( props ) => {
   const onChangeImages = async e=>{
     let {files} = e.target;
 
-    if( state.medias.length + files.length > 4 )
+    if( state.medias?.length + files.length > 4 )
       return;
 
     const mediaInfo    = [];
@@ -120,97 +112,103 @@ export const PostCard = ( props ) => {
 
     setState( x=>{
       let copy = {...x};
-      copy.medias = [...copy.medias, ...mediaInfo];
-      copy.newMedias = [...copy.newMedias, ...newMediaFiles];
+
+      if (copy.medias)
+        copy.medias = [...copy.medias, ...mediaInfo];
+      else 
+        copy.medias = [...mediaInfo];
+
+      if (copy.medias)
+        copy.newMedias = [...copy.newMedias, ...newMediaFiles];
+      else 
+        copy.medias = [...newMediaFiles];
+
       return copy;
     });
   };
 
   const onClickFileOpen = ()=>inputFileRef.current?.click();
 
-  const onClickLike = ()=>{
-
-    const model = new LikeViewModel({
-      postID: post.postID, 
-      userID: authenticationService.currentUserValue.id 
-     });
+  const onClickLike = async ()=>{
 
     if( post.isLiked ){
-      deleteLike(model)
-       .then(handleResponse)
-       .then( res =>{
-          const { data } = res;
-          setPost( data );
-          setState( x=>{
-            let copy = {...x};
-            copy.content         = data.content;
-            copy.originalContent = data.content;
-            copy.medias          = data.medias;
-            copy.originalMedias  = data.medias;
-            return copy;
-          });
-       })
-       .catch(console.warn)
+
+      const {data:responseData, err}  = await deleteLike(post.postID);
+
+      if ( err != null ) return;
+
+      const { data } = responseData;
+
+      if (data === null ) return;
+
+      setPost( data );
+      setState( x=>{
+        let copy = {...x};
+        copy.content         = data.content;
+        copy.originalContent = data.content;
+        copy.medias          = data.medias;
+        copy.originalMedias  = data.medias;
+        return copy;
+      });
     }
     else{
-      createLike(model)
-        .then(handleResponse)
-        .then(res=>{
-          const { data } = res;
-          setPost( data );
-          setState( x=>{
-            let copy = {...x};
-            copy.content         = data.content;
-            copy.originalContent = data.content;
-            copy.medias          = data.medias;
-            copy.originalMedias  = data.medias;
-            return copy;
-          });
-        })
-        .catch(console.warn);
+
+      const {data:responseData, err}  = await createLike(authenticationService.currentUserValue.id, post.postID);
+
+      if ( err != null ) return;
+
+      const { data } = responseData;
+
+      if (data === null ) return;
+
+      setPost( data );
+      setState( x=>{
+        let copy = {...x};
+        copy.content         = data.content;
+        copy.originalContent = data.content;
+        copy.medias          = data.medias;
+        copy.originalMedias  = data.medias;
+        return copy;
+      });
     }
   };
 
-  const onClickRepost = ()=>{
+  const onClickRepost = async ()=>{
 
-    const model = new RepostViewModel({
-      postID: post.postID, 
-      userID: authenticationService.currentUserValue.id 
-     });
+    if( post.isReposted ) {
+      const {data:responseData, err} = await deleteRepost(post.postID);
 
-    if( post.isReposted){
-      deleteRepost(model)
-      .then(handleResponse)
-      .then ( res =>{
-        const { data } = res;
-        setPost( data );
-        setState( x=>{
-          let copy = {...x};
-          copy.content         = data.content;
-          copy.originalContent = data.content;
-          copy.medias          = data.medias;
-          copy.originalMedias  = data.medias;
-          return copy;
-        });
-      })
-      .catch(console.warn);
+      if ( err !== null) return;
+
+      const { data } = responseData;
+
+      setPost( data );
+      setState( x=>{
+        let copy = {...x};
+        copy.content         = data.content;
+        copy.originalContent = data.content;
+        copy.medias          = data.medias;
+        copy.originalMedias  = data.medias;
+        return copy;
+      });
     }
     else{
-      createRepost(model)
-      .then(handleResponse)
-      .then ( res =>{
-        const { data } = res;
-        setPost( data );
-        setState( x=>{
-          let copy = {...x};
-          copy.content         = data.content;
-          copy.originalContent = data.content;
-          copy.medias          = data.medias;
-          copy.originalMedias  = data.medias;
-          return copy;
-        });
-      })
-      .catch(console.warn);
+
+      const {data:responseData, err} = await createRepost(authenticationService.currentUserValue.id, post.postID);
+
+      if ( err !== null) return;
+
+      const { data } = responseData;
+
+      setPost( data );
+      setState( x=>{
+        let copy = {...x};
+        copy.content         = data.content;
+        copy.originalContent = data.content;
+        copy.medias          = data.medias;
+        copy.originalMedias  = data.medias;
+        return copy;
+      });
     }
   };
 
@@ -220,7 +218,11 @@ export const PostCard = ( props ) => {
       copy.editMode = !copy.editMode;
 
       if( copy.editMode === false ){
-        copy.medias     = [...copy.originalMedias];
+
+        if( copy.originalMedias)
+          copy.medias   = [...copy.originalMedias];
+        else
+          copy.medias   = null;
         copy.content    = copy.originalContent;
         copy.deleted    = [];
         copy.newMedias  = [];
@@ -247,13 +249,15 @@ export const PostCard = ( props ) => {
       {
         (post.isRepost !== 0) &&
         <Typography variant='body2' className={styles.repostText}>
-          <Link to={routes.getProfile(post.publisherID)} className={styles.repostUserLink}>{post.reposterUserName}</Link> reposted this!
+          <Link to={routes.getProfile(post.publisherID)} className={styles.repostUserLink}>  
+            <ReplyAllIcon className={styles.repostedIcon}/> {post.reposterUserName} reposted this!
+          </Link> 
         </Typography>
       }
       <CardContent>
           <div className={styles.displayTitle}>
             <Link to={routes.getProfile(post.publisherID)} className={styles.avatarContainer}>
-              <img src={post.publisherProfilePic} className={styles.avatar}/>
+              <img src={post.publisherProfilePic || '/img/backgroundPT.png'} className={styles.avatar}/>
             </Link>
             <Link to={routes.getProfile(post.publisherID)} className={styles.titleContainer}>
               <Typography variant='h6' component='h2' className={styles.title}>
@@ -271,7 +275,7 @@ export const PostCard = ( props ) => {
                     color='secondary' 
                     onClick={onToggleEditMode}
                   >
-                    { state.editMode ?  <CancelIcon className={styles.actionIcon}/> : <EditIcon className={styles.actionIcon}/>  }
+                    { state.editMode ?  <CancelIcon className={styles.cancelIcon}/> : <EditIcon className={styles.saveIcon}/>  }
                   </IconButton>
                   { 
                     !state.editMode && <IconButton 
@@ -280,7 +284,7 @@ export const PostCard = ( props ) => {
                       onClick={onClickDelete}
                       className={styles.deleteBtn}
                     >
-                      <DeleteIcon className={styles.actionIcon}/> 
+                      <DeleteIcon className={styles.cancelIcon}/> 
                     </IconButton>
                     }
                   {
