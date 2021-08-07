@@ -36,6 +36,8 @@ import {
 
 import { UPostModel, RepostViewModel } from '_model';
 
+import Placeholder from 'assets/avatar-placeholder.svg'
+
 import styles from '_styles/PostCard.module.css';
 
 export const PostCard = ( props ) => {
@@ -58,25 +60,28 @@ export const PostCard = ( props ) => {
 
   const temp = { state, setState };
 
-  const onClickSave = ()=>{
-    updatePost( post.postID,  new UPostModel({content: state.content, deleted: state.deleted, files: state.newMedias}))
-      .then( handleResponse )
-      .then( res =>{
+  const onClickSave = async ()=>{
+    const {data:responseData, err} =
+      await updatePost( 
+        post.postID,  
+        new UPostModel({
+          content: state.content, 
+          deleted: state.deleted, 
+          files: state.newMedias})
+      );
 
-        let { data } = res;
+    if (err !== null) return;
 
-        setState(x=>{
-          let copy              = {...x};
-          copy.editMode         = false;
-          copy.originalContent  = copy.content;
-          copy.medias           = data.medias;
-          copy.originalMedias   = data.medias;
-          return copy;
-        });
-      })
-      .catch( res =>{
-        console.log('err',res)
-      });
+    const {data} = responseData
+
+    setState(x=>{
+      let copy              = {...x};
+      copy.editMode         = false;
+      copy.originalContent  = copy.content;
+      copy.medias           = data.medias;
+      copy.originalMedias   = data.medias;
+      return copy;
+    });
   };
   
   const onChangeContent = e=>{
@@ -231,14 +236,13 @@ export const PostCard = ( props ) => {
     })
   };
 
-  const onClickDelete = ()=>{
+  const onClickDelete = async ()=>{
     if(window.confirm('Seguro que quiere borrar el post')){
-      deletePost(post.postID)
-      .then(handleResponse)
-      .then(res=>{
-        history.replace(routes.feed);
-      })
-      .catch(console.warn);
+      const {err} = await deletePost(post.postID);
+
+      if ( err !== null ) return;
+
+      history.replace(routes.feed);
     }
   };
 
@@ -257,7 +261,7 @@ export const PostCard = ( props ) => {
       <CardContent>
           <div className={styles.displayTitle}>
             <Link to={routes.getProfile(post.publisherID)} className={styles.avatarContainer}>
-              <img src={post.publisherProfilePic || '/img/backgroundPT.png'} className={styles.avatar}/>
+              <img src={post.publisherProfilePic || Placeholder} className={styles.avatar}/>
             </Link>
             <Link to={routes.getProfile(post.publisherID)} className={styles.titleContainer}>
               <Typography variant='h6' component='h2' className={styles.title}>

@@ -188,6 +188,7 @@
     border-radius: 50%;
     background-color: #333333;
     border: 1px solid #f28a9a;
+    object-fit: cover;
 }
 
 .repostUserLink{

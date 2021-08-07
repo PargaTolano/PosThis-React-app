@@ -5,6 +5,7 @@ import { makeStyles }           from '@material-ui/core/styles';
 
 import { NavBar }               from 'components/Feed';
 import { ProfileContainer }     from 'components/Profile';
+import { PaginationElement } from 'components/Common';
 
 import { routes }               from '_utils';
 import { useGetUserProfile }    from '_hooks';
@@ -38,12 +39,16 @@ export const ProfileDetail = (props) => {
       <div className= {classes.Background}>
       <NavBar {...rest}/>
       {
-        ( ready ) 
-        && 
-        (
-          <ProfileContainer user={user} setUser={setUser} {...rest}/>
-        )
+        ready && <ProfileContainer user={user} setUser={setUser} {...rest}/>
       }
+      <PaginationElement
+        name            = 'posts'
+        hasFetched      = {true}
+        total           = {0}
+        last            = {0}
+        limit           = {1}
+        onIntersection  = {()=>{}}
+      />
         
       </div>
   );

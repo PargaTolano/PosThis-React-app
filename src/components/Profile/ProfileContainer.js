@@ -10,44 +10,14 @@ import { authenticationService }      from '_services';
 import { getUserFeed }                from '_api';
 import { loadingState } from '_hooks';
 
-const useStyles = makeStyles((theme) => ({
-  root:{
-    width:        '100%',
-    maxWidth:     '1200px',
-    marginLeft:   'auto',
-    marginRight:  'auto'
-  },
-  coverPic:{
-    display: 'inline-block',
-    width: '100%',
-    height: theme.spacing( 50 ),
-    objectFit: 'cover',
-    borderRadius: '0px 0px 10px 10px',
-    marginBottom: theme.spacing( 3 ),
-    [theme.breakpoints.down('sm')]:{
-      marginBottom: theme.spacing( 33 ),
-    }
-  },
-  column:{
-    position:     'relative',
-    width:        '100%',
-    paddingLeft:  '30%',
-    [theme.breakpoints.down('sm')]:{
-      paddingLeft: '0'
-    }
-  }
-}));
+import coverPlaceholder from 'assets/background-placeholder.jpg';
 
-const coverPlaceholder = 
-  'https://png.pngtree.com/thumb_back/fw800/background/20190220/ourmid/pngtree-blue-gradient-summer-creative-image_9270.jpg';
+import styles from '_styles/ProfileContainer.module.css';
 
 export const ProfileContainer = ( props ) => {
   const { user, ...rest } = props;
-  const classes = useStyles();
 
   const [posts, setPosts] = useState([]);
-
-  console.log('USER DATA ', user);
 
   const loadFeed = async ()=>{
 
@@ -70,19 +40,17 @@ export const ProfileContainer = ( props ) => {
   },[user]);
 
   return (
-      <div className={classes.root}>
+      <div className={styles.root}>
 
-        <img className={classes.coverPic} src={ user.coverPicPath || coverPlaceholder } />
+        <img className={styles.coverPic} src={ user.coverPicPath || coverPlaceholder } />
 
         <ProfileCard user={user} {...rest}/>
-        <div className={classes.column}>
 
-          {
-            ( authenticationService.currentUserValue.id === user.id ) && <CreatePostForm afterUpdate={loadFeed} {...rest}/>
-          }
+        {
+          ( authenticationService.currentUserValue.id === user.id ) && <CreatePostForm afterUpdate={loadFeed} {...rest}/>
+        }
 
-          <PostContainer posts={posts} {...rest}/>
-        </div>
+        <PostContainer posts={posts} {...rest}/>
         
       </div>
   );

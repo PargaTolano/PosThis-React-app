@@ -30,6 +30,8 @@ import { fileToBase64, routes }     from '_utils';
 import { updateReply, deleteReply } from '_api';
 import { UReplyModel }              from '_model';
 
+import Placeholder from 'assets/avatar-placeholder.svg'
+
 import styles from '_styles/ReplyCard.module.css';
 
 export const ReplyCard = ( props ) => {
@@ -51,17 +53,19 @@ export const ReplyCard = ( props ) => {
 
   const dateString = new Date( Date.parse( reply.date ) ).toLocaleString();
 
-  const onClickSave = ()=>{
+  const onClickSave = async ()=>{
 
     let model = new UReplyModel({
       content: state.content.trim(),
       deleted: state.deleted,
       files:   state.newmedias });
 
-    updateReply( reply.replyID, model)
-      .then( handleResponse )
-      .then(()=>replyService.getPostReplies(id))
-      .catch(console.warn);
+    const {data:responseData, err} = await updateReply( reply.replyID, model);
+
+    if (err !== null) return;
+
+    onToggleEditMode();
+    replyService.getPostReplies(id);
   };
 
   const onChangeContent = e=>{
@@ -123,12 +127,10 @@ export const ReplyCard = ( props ) => {
     })
   };
 
-  const onClickDelete = ()=>{
+  const onClickDelete = async ()=>{
     if(window.confirm('Seguro que quiere borrar la respuesta')){
-      deleteReply(reply.replyID)
-      .then(handleResponse)
-      .then(()=>replyService.getPostReplies(id))
-      .catch(console.warn);
+      const { err } = deleteReply(reply.replyID);
+      replyService.getPostReplies(id);
     }
   };
 
@@ -145,7 +147,7 @@ export const ReplyCard = ( props ) => {
 
           <div className={styles.displayTitle}>
             <Link to={routes.getProfile(reply.publisherID)} className={styles.avatarContainer}>
-              <img src={reply.publisherProfilePic} className={styles.avatar}/>
+              <img src={reply.publisherProfilePic || Placeholder} className={styles.avatar}/>
             </Link>
             <Link to={routes.getProfile(reply.publisherID)} className={styles.titleContainer}>
               <Typography variant='h6' component='h2' className={styles.title}>

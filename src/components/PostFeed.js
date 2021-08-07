@@ -104,9 +104,6 @@ export const Feed = (props) => {
   return (
     <div className={classes.Background}>
       <NavBar history={history}/>
-      <div component='h4' variant='h2' className={classes.titleBegin}>
-        <strong>Crear Post</strong>
-      </div>
       <CreatePostForm afterUpdate={loadFeed}/>
       {
         (posts?.length !== 0) && <PostContainer posts={posts} history={history}/>

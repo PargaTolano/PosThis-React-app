@@ -18,7 +18,7 @@ export const PaginationElement = ({name, hasFetched, total, last, limit, onInter
                     <CircularProgress color='primary'/>
 
                 :
-                    <h3 className={styles.unavailable}>Sorry, no more {name} are available right now :(</h3>
+                    <h3 className={styles.unavailable}>Sorry, no more {name} are available right now</h3>
 
             }
         </div>
