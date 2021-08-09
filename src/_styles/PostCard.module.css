@@ -3,12 +3,12 @@
     max-width:         700px;
     background-color:  #2b387f;
     box-shadow:        0 0 15px black;
-    border-radius:     5px;
+    border-radius:     10px;
 }
 
 .root:only-child{
-    box-shadow: none;
-    border-radius:     5px 5px 0 0;
+    box-shadow:         none;
+    border-radius:      10px;
 }
 
 .media {
@@ -28,8 +28,8 @@
 }
 
 .titleContainer{
-    display: flex;
-    align-items: flex-start;
+    display:        flex;
+    align-items:    flex-start;
 }
 
 .title {

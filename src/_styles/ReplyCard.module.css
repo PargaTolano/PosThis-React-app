@@ -52,8 +52,8 @@
   white-space:     pre-wrap
 }
 
-input{
-    display: none
+.input{
+  display: none
 }
 
 .displayTitle{

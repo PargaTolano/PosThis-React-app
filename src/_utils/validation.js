@@ -55,17 +55,17 @@ const validateSignup = ( {username, tag, email, password} ) =>{
     return validation;
 };
 
-const validateUpdateUser = ( {userName, tag, email} ) =>{
+const validateUpdateUser = ( {username, tag, email} ) =>{
 
     const validation = {
-        userName:   true,
+        username:   true,
         tag:        true,
         email:      true,
         validated:  true,
     };
 
-    if ( !userNameRegex .test( userName || '' ) ){
-        validation.userName     = false;
+    if ( !userNameRegex .test( username || '' ) ){
+        validation.username     = false;
         validation.validated    = false;
     }
 

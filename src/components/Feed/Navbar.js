@@ -1,114 +1,85 @@
-import React,{ useRef, useState} from 'react';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  InputBase,
-  MenuItem,
-  Menu,
-  Button,
-} from '@material-ui/core';
+import React,{ useRef, useState, useEffect} from 'react';
 
 import { Link }                   from 'react-router-dom';
 import { fade, makeStyles }       from '@material-ui/core/styles';
-import SearchIcon                 from '@material-ui/icons/Search';
-import AccountCircle              from '@material-ui/icons/AccountCircle';
+
+import {  
+  Search as SearchIcon, 
+  ArrowDropDown as ArrowDropDownIcon 
+} from '@material-ui/icons';
+
 import Logo                       from 'assets/Logo.png';
 import LogoNominado               from 'assets/logPT.svg';
 
-import { routes }                 from '_utils';
+import { authTokenKey, routes }   from '_utils';
 import { authenticationService }  from '_services';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  PosthisLogo: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  titleimg: {},
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    marginRight: theme.spacing(2),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-  Tool:{
-    position: 'sticky',
-    top: 0,
-    backgroundColor: '#1b2452',
-  },
-  userIcon:{
-    color: '#ea5970',
-  },
-}));
+import profilePicPlaceholder from 'assets/avatar-placeholder.svg';
+
+import styles from '_styles/Navbar.module.css';
+
+export const DropDownMenu = ( { visible, setVisible} ) =>{
+
+  const ref = useRef(null);
+
+  useEffect(()=>{
+
+    const clickListener = e=> {
+      console.log(e.target, ref.current);
+      console.log(e.target.customprop)
+
+      if( e.target != ref.current){
+        setVisible(false);
+        return;
+      }
+    };
+
+    window.addEventListener('click', clickListener);
+
+    return ()=>{
+      window.removeEventListener('click', clickListener)
+    };
+  },[]);
+
+  return (
+    <div 
+      ref = {ref}
+      className={ visible ? styles.dropDownContainer : styles.dropDownContainerInvisible} 
+      onClick={ e => void e.stopPropagation()}
+    >
+      <ul className={styles.dropDownMenu}>
+        <Link 
+          className={styles.dropDownMenuItem}
+          to={routes.getProfile(authenticationService.currentUserValue.id)}
+        >
+          Profile
+        </Link>
+        <Link 
+          className={styles.dropDownMenuItem}
+          to={routes.getProfile(authenticationService.currentUserValue.id)}
+        >
+          Profile
+        </Link>
+      </ul>
+    </div>
+  )
+};
 
 export const NavBar = ( props ) => {
 
   const { history } = props;
 
+  const {profilePicPath} = JSON.parse(localStorage.getItem( authTokenKey ));
+
   const ref = useRef(null);
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [dropDownVisible, setDropDownVisible] = useState(false);
   const [query, setQuery]       = useState('');
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleClick = (e) => { e.stopPropagation(); setDropDownVisible(true) };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => void setDropDownVisible(false);
 
-  const onClickProfile = () => {
-    history.push( routes.getProfile( authenticationService.currentUserValue.id ) );
-  };
-
-  const handleLogOut = () => {
-    authenticationService.logout();
-    history.push( routes.login );
-  }
+  const handleLogOut = () => void authenticationService.logout();
 
   const onChange = ( e ) => void setQuery( e.target.value);
 
@@ -119,63 +90,59 @@ export const NavBar = ( props ) => {
   };
 
   return (
-      <AppBar className={classes.Tool}>
-        <Toolbar>
-          <div>
-              <Link to={routes.feed}>
-              <img className={classes.PosthisLogo} src= {Logo} width= '50' height='50'/>
-              </Link>
-          </div>
+      <div className={styles.navbar}>
 
-          <div className={classes.title}>
-            <img src={LogoNominado} width='120' height='60' alt='Logo' />
-          </div>
+        <div className={styles.content}>
+          <Link to={routes.feed}>
+            <img className={styles.logo} src= {Logo}/>
+            <img className={styles.logo} src= {LogoNominado}/>
+          </Link>
 
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
+          <div className={styles.searchBar}>
+            <div className={styles.searchIcon}>
               <SearchIcon />
             </div>
 
-            <form  onSubmit ={onSearch}>
-              <InputBase
+            <form className={styles.searchBarForm} onSubmit ={onSearch}>
+              <input
+                className={styles.searchBarInput}
                 ref={ref}
-                placeholder='Buscar…'
+                placeholder='Search…'
                 value={query}
-                classes ={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ 'aria-label': 'search' }}
                 onChange  ={onChange}
-
               />
             </form>
             
           </div>
 
-          <div>
-            <IconButton
-              color='inherit'
-              aria-controls='simple-menu'
-              aria-haspopup='true'
+          <div className={styles.pfpFlex}>
+            <Link
+              className={styles.pfpContainer} 
+              to={routes.getProfile( authenticationService.currentUserValue.id ) }
+            >
+              <img 
+                className={styles.pfp} 
+                src={profilePicPath || profilePicPlaceholder}
+              />
+            </Link>
+
+            <div 
+              className={styles.dropDownIconContainer}
               onClick={handleClick}
             >
-            <AccountCircle className={classes.userIcon}/>
-            </IconButton>
-
-            <Menu
-              id='simple-menu'
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={onClickProfile }>Perfil</MenuItem>
-              <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
-            </Menu>
+              <ArrowDropDownIcon 
+                className={styles.dropDownIcon}
+              />
+            </div>
+            
+            <DropDownMenu
+              visible={dropDownVisible}
+              setVisible={setDropDownVisible}
+            />
           </div>
-        </Toolbar>
-      </AppBar>
+        </div>
+            
+      </div>
   );
 }
 

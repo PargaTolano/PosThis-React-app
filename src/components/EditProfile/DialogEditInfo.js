@@ -16,7 +16,9 @@ import {
   Settings as SettingsIcon
 } from '@material-ui/icons';
 
-const styles = (theme) => ({
+import styles from '_styles/ProfileSettingsButton.module.css';
+
+const dlgstyles = (theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
@@ -30,7 +32,7 @@ const styles = (theme) => ({
   
 });
 
-const DialogTitle = withStyles(styles)((props) => {
+const DialogTitle = withStyles(dlgstyles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
@@ -74,13 +76,15 @@ export const DialogEditInfo = ({children, color}) => {
   });
 
   return (
-    <div>
+    <>
       <IconButton  
           aria-label='upload picture'
           component ='span' 
           variant   ='contained' 
           color     ={ color || 'secondary' } 
-          onClick   ={handleClickOpen}>
+          onClick   ={handleClickOpen}
+          className ={styles.btn}
+      >
         <SettingsIcon />
       </IconButton>
       <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
@@ -89,7 +93,7 @@ export const DialogEditInfo = ({children, color}) => {
         </DialogContent>
         
       </Dialog>
-    </div>
+    </>
   );
 };
 

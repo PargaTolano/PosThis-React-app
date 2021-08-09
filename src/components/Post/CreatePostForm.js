@@ -85,7 +85,7 @@ export const CreatePostForm = (props) => {
 
     <form className={styles.form} noValidate onSubmit={onSubmit}>
         <div component='h4' variant='h2' className={styles.titleForm}>
-          <strong>Nuevo PosThis!</strong>
+          <strong>New PosThis!</strong>
         </div>
         <TextField
           variant='outlined'
@@ -94,7 +94,7 @@ export const CreatePostForm = (props) => {
           rows={3}
           rowsMax={3}
           fullWidth
-          label='Escribir...'
+          label="What's on your mind?"
           name='postContent'
           autoComplete='postContent'
           autoFocus
@@ -115,7 +115,7 @@ export const CreatePostForm = (props) => {
           className={styles.submit}
           disabled = {!validation.validated}
         >
-          Publicar
+          PosThis!
         </Button>
           
         <input

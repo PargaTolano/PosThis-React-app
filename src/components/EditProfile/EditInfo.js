@@ -24,6 +24,9 @@ import { authenticationService }                from '_services';
 
 import { UpdateUserViewModel }                  from '_model';
 
+import defaultProfilePic  from 'assets/avatar-placeholder.svg';
+import defaultCoverPic    from 'assets/background-placeholder.jpg';
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
@@ -75,11 +78,16 @@ const useStyles = makeStyles((theme) => ({
     color: '#ea5970',
     fontSize: '0.8rem',
     marginTop: theme.spacing(1)
+  },
+  divider:{
+    display: 'inline-block',
+    width: '100%',
+    height: 2,
+    backgroundColor: '#DDDDDD',
+    margin: theme.spacing(4, 0 ),
   }
 }));
 
-const defaultProfilePic = 'https://image.freepik.com/vector-gratis/perfil-avatar-hombre-icono-redondo_24640-14044.jpg';
-const defaultCoverPic   = 'https://png.pngtree.com/thumb_back/fw800/background/20190220/ourmid/pngtree-blue-gradient-summer-creative-image_9270.jpg';
 
 export const EditInfo = ( props ) => {
 
@@ -91,9 +99,10 @@ export const EditInfo = ( props ) => {
   const inputCoverRef     = useRef();
 
   const [state, setState] = useState({
-    userName:           user.userName,
+    username:           user.username,
     tag:                user.tag,
     email:              user.email,
+    password:           user.password,
     changedProfilePic:  false,
     profilePic:         null,
     profilePicPreview:  user.profilePicPath,
@@ -103,7 +112,7 @@ export const EditInfo = ( props ) => {
   });
 
   const [validation, setValidation]= useState({
-    userName:   false,
+    username:   false,
     tag:        false,
     email:      false,
     validated:  false,
@@ -173,18 +182,18 @@ export const EditInfo = ( props ) => {
   };
   
   return (
-    <Container component='main' maxWidth='xs'>
+    <Container component='main' maxWidth='sm'>
       <CssBaseline />
       <div className={classes.paper}>
 
         <AccountCircle className={classes.userIcon}/>
 
         <Typography component='h1' variant='h5'>
-          <strong>Mi Perfil</strong>
+          <strong>Your Profile</strong>
         </Typography>
 
         <Typography variant='body2'>
-          Actualizar información.
+          Update Your Info!
         </Typography>
 
         <form className={classes.form} onSubmit={onSubmit} noValidate>
@@ -216,23 +225,18 @@ export const EditInfo = ( props ) => {
           
             <Grid item xs={12} sm={6}>
               <TextField
-                name='userName'
+                name='username'
                 autoComplete='fname'
                 variant='outlined'
                 required
                 fullWidth
-                value={state.userName}
+                value={state.username}
                 onChange={onChangeTextField}
                 label='Usuario'
                 autoFocus
+                error = {!validation.username}
+                helperText = { !validation.username && 'valid username required' }
               />
-              {
-                !validation.userName
-                && 
-                <Typography variant='body2' className={classes.fieldWarning}>
-                * Nombre de Usuario no valido
-                </Typography>
-              }
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -245,14 +249,9 @@ export const EditInfo = ( props ) => {
                 value={state.tag}
                 onChange={onChangeTextField}
                 autoComplete='tagname'
+                error = {!validation.tag}
+                helperText = { validation.tag ? '*just alphanumeric characters' : 'valid tag required' }
               />
-              {
-                !validation.tag
-                && 
-                <Typography variant='body2' className={classes.fieldWarning}>
-                * Tag no valido
-                </Typography>
-              }
             </Grid>
 
             <Grid item xs={12}>
@@ -297,6 +296,20 @@ export const EditInfo = ( props ) => {
                   <ImageIcon className={classes.imageIcon}/>
                 </IconButton>
               </label>
+            </Grid>
+            <Grid item xs={12} className={classes.pictures}>
+              <div className={classes.divider}/>
+              <TextField
+                name='password'
+                variant='outlined'
+                required
+                fullWidth
+                label='Password'
+                type='password'
+                value={state.password}
+                onChange = {onChangeTextField}
+                autoComplete='email'
+              />
             </Grid>
 
           </Grid>

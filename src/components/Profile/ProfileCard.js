@@ -10,8 +10,6 @@ import {
 
 import { makeStyles }   from '@material-ui/core/styles';
 
-import { DialogEditInfo, EditInfo }   from 'components/EditProfile';
-
 import { createFollow, deleteFollow } from '_api';
 import { handleResponse }             from '_helpers';
 import { authenticationService}       from '_services';
@@ -126,13 +124,7 @@ export const ProfileCard = ( props ) => {
           </div>
         }
 
-        {
-          (authenticationService.currentUserValue.id === user.id) 
-          &&
-          <DialogEditInfo color={'primary'}>
-            <EditInfo user={user} setUser={setUser}/>
-          </DialogEditInfo>
-        }
+       
       </div>
     </div>
   );

@@ -246,12 +246,14 @@ export const PostCard = ( props ) => {
     }
   };
 
+  console.log('POST IS REPOST',post.isRepost)
+
   const dateString = new Date(Date.parse( post.date )).toLocaleString();
 
   return (
     <div className={styles.root}>
       {
-        (post.isRepost !== 0) &&
+        (!!post.isRepost) &&
         <Typography variant='body2' className={styles.repostText}>
           <Link to={routes.getProfile(post.publisherID)} className={styles.repostUserLink}>  
             <ReplyAllIcon className={styles.repostedIcon}/> {post.reposterUserName} reposted this!
