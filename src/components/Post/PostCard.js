@@ -21,7 +21,7 @@ import {
 
 import { MediaGrid }                from 'components/Media';
 
-import { handleResponse }           from '_helpers';
+import { handleResponse, prettyDate }           from '_helpers';
 import { authenticationService }    from '_services';
 import { routes, fileToBase64 }     from '_utils';
 
@@ -246,10 +246,6 @@ export const PostCard = ( props ) => {
     }
   };
 
-  console.log('POST IS REPOST',post.isRepost)
-
-  const dateString = new Date(Date.parse( post.date )).toLocaleString();
-
   return (
     <div className={styles.root}>
       {
@@ -268,7 +264,7 @@ export const PostCard = ( props ) => {
             <Link to={routes.getProfile(post.publisherID)} className={styles.titleContainer}>
               <Typography variant='h6' component='h2' className={styles.title}>
                 <strong className={styles.publisher}>{post.publisherUserName} {'@'+post.publisherTag}</strong>
-                <p className={styles.date}>{ dateString.slice( 0, dateString.length - 6 ) } { dateString.slice(dateString.length-3) }</p>
+                <p className={styles.date}> { prettyDate(post.date) } </p>
               </Typography>
             </Link>
             <div  className={styles.displaybtn}>

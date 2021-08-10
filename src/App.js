@@ -36,13 +36,13 @@ function App() {
             .subscribe(({content, type}) => 
               {
                 toast[type]( content, {
-                  position: 'top-left',
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
+                  position:         'top-left',
+                  autoClose:        3000,
+                  hideProgressBar:  false,
+                  closeOnClick:     true,
+                  pauseOnHover:     true,
+                  draggable:        true,
+                  progress:         undefined,
                 })
               }
             );
@@ -50,7 +50,7 @@ function App() {
     let authSubs = 
           authenticationService
               .currentUser
-              .subscribe(x=>setUser(x));
+              .subscribe(x=> void setUser(x));
 
 
     return ()=>{

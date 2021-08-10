@@ -54,9 +54,9 @@ export const ProfileContainer = ( props ) => {
               <EditInfo user={user} setUser={setUser}/>
             </DialogEditInfo>
           }
+          <ProfileCard user={user} {...rest}/>
         </div>
 
-        <ProfileCard user={user} {...rest}/>
 
         {
           ( authenticationService.currentUserValue.id === user.id ) && <CreatePostForm afterUpdate={loadFeed} {...rest}/>

@@ -25,7 +25,7 @@ import {
 import { MediaGrid }                from 'components/Media';
 
 import { authenticationService, replyService }    from '_services';
-import { handleResponse, history }  from '_helpers';
+import { handleResponse, history, prettyDate }  from '_helpers';
 import { fileToBase64, routes }     from '_utils';
 import { updateReply, deleteReply } from '_api';
 import { UReplyModel }              from '_model';
@@ -45,7 +45,7 @@ export const ReplyCard = ( props ) => {
     originalContent:  reply.content,
     medias:           reply.medias,
     originalmedias:   reply.medias,
-    deleted:         [],
+    deleted:          [],
     newmedias:        []
   });
 
@@ -63,9 +63,19 @@ export const ReplyCard = ( props ) => {
     const {data:responseData, err} = await updateReply( reply.replyID, model);
 
     if (err !== null) return;
+    
+    const { data } = responseData;
 
-    onToggleEditMode();
     replyService.getPostReplies(id);
+    setState({
+      editMode:         false,
+      content:          data.content,
+      originalContent:  data.content,
+      medias:           data.medias,
+      originalmedias:   data.medias,
+      deleted:          [],
+      newmedias:        []
+    });
   };
 
   const onChangeContent = e=>{
@@ -152,7 +162,7 @@ export const ReplyCard = ( props ) => {
             <Link to={routes.getProfile(reply.publisherID)} className={styles.titleContainer}>
               <Typography variant='h6' component='h2' className={styles.title}>
                 <strong className={styles.publisher}>{reply.publisherUserName} {'@'+reply.publisherTag}</strong>
-                <p className={styles.date}>{ dateString.slice( 0, dateString.length - 6 ) } { dateString.slice(dateString.length-3) }</p>
+                <p className={styles.date}>{ prettyDate(reply.date) }</p>
               </Typography>
             </Link>
             <div  className={styles.displaybtn}>

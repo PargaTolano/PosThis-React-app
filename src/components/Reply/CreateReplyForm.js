@@ -12,17 +12,13 @@ import {
   IconButton,
 } from '@material-ui/core';
 
-import { FormMediaGrid }            from 'components/Media';
+import { FormMediaGrid }                            from 'components/Media';
 
-import { handleResponse }           from '_helpers';
-import { authenticationService, replyService }    from '_services';
-import { 
-  fileToBase64,
-   validateCreateAndUpdatePost 
-} from '_utils';
-import { createReply }              from '_api';
-
-import {CReplyModel}     from '_model';
+import { handleResponse }                           from '_helpers';
+import { authenticationService, replyService }      from '_services';
+import { fileToBase64,validateCreateAndUpdatePost } from '_utils';
+import { createReply }    from '_api';
+import {CReplyModel}      from '_model';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -111,15 +107,15 @@ export const CreateReplyForm = (props) => {
         content,
         files: images.map(x=>x.file)});
 
-    createReply( model )
-          .then(handleResponse)
-          .then( res =>{
-            let { data } = res;
-            setImages ([]);
-            setContent('');
-            replyService.getPostReplie(postId);
-          })
-          .catch( console.warn );
+    const { err } = await createReply( model );
+
+    if(err != null) 
+      return;
+
+    replyService.getPostReplies(postId);
+
+    setImages([]);
+    setContent('');
   };
 
   const onChangeImage = async ( e )=>{

@@ -25,9 +25,6 @@ export const DropDownMenu = ( { visible, setVisible} ) =>{
   useEffect(()=>{
 
     const clickListener = e=> {
-      console.log(e.target, ref.current);
-      console.log(e.target.customprop)
-
       if( e.target != ref.current){
         setVisible(false);
         return;
@@ -48,18 +45,28 @@ export const DropDownMenu = ( { visible, setVisible} ) =>{
       onClick={ e => void e.stopPropagation()}
     >
       <ul className={styles.dropDownMenu}>
-        <Link 
+
+        <li 
           className={styles.dropDownMenuItem}
-          to={routes.getProfile(authenticationService.currentUserValue.id)}
         >
-          Profile
-        </Link>
-        <Link 
+          <Link
+            className={styles.dropDownMenuItemContent}
+            to={routes.getProfile(authenticationService.currentUserValue.id)}
+          >
+            Profile
+          </Link>
+        </li>
+
+        <li 
           className={styles.dropDownMenuItem}
-          to={routes.getProfile(authenticationService.currentUserValue.id)}
         >
-          Profile
-        </Link>
+          <span
+            className={styles.dropDownMenuItemContent}
+            onClick={authenticationService.logout}
+          >
+            Log out
+          </span>
+        </li>
       </ul>
     </div>
   )
