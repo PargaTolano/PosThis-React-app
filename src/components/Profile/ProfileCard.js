@@ -19,54 +19,8 @@ import profilePicPlaceholder from 'assets/avatar-placeholder.svg';
 
 import styles from '_styles/ProfileCard.module.css';
 
-const useStyles = makeStyles((theme) => ({
-  media: {
-    height: 140,
-  },
-  cardBtn: {
-    padding:        '0',
-    margin:         '0',
-    alignItems:     'center',
-    justifyContent: 'space-between',
-    color:          'white',
-  },
-  title: {
-    color:    'white',
-    fontSize: '1.1rem'
-  },
-  secondaryTitle: {
-    color:    'white',
-    fontSize: '0.8rem'
-    
-  },
-  content: {
-    color:          'white',
-    marginLeft:     theme.spacing(7),
-    marginBottom:   theme.spacing(1),
-  },
-  layTitle:{
-    display: 'inline-flex'
-  },
-  profilePicture:{
-    width:        150,
-    height:       150,
-    objectFit:    'cover',
-    borderRadius: '50%',
-    backgroundColor: '#333333'
-  },
-  contImg:{
-    alignItems: 'center',
-    textAlign:  'center',
-  },
-  followNum:{
-    alignItems: 'center',
-    textAlign:  'center',
-  }
-}));
-
 export const ProfileCard = ( props ) => {
   const { user, setUser } = props;
-  const classes = useStyles();
 
   const OnClickFollowButton = async ()=>{
     const model = new FollowViewModel({

@@ -6,8 +6,8 @@ export  class UpdateUserViewModel{
     profilePic  ;
     coverPic    ;
 
-    constructor({userName, tag, email, profilePic, coverPic}){
-        this.userName   = userName   ;
+    constructor({username, tag, email, profilePic, coverPic}){
+        this.username   = username   ;
         this.tag        = tag        ;
         this.email      = email      ;
         this.profilePic = profilePic ;

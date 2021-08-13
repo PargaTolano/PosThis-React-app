@@ -68,17 +68,26 @@ export const DialogSignup = ({children}) => {
 
   return (
     <div>
-      <Button variant='contained' color='secondary' onClick={handleClickOpen}>
-        Regístrate
+      <Button 
+        type='button'
+        fullWidth 
+        variant ='contained' 
+        color   ='secondary'
+        onClick ={handleClickOpen}
+      >
+        Sign up
       </Button>
-      <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
+      <Dialog 
+        onClose={handleClose} 
+        aria-labelledby='Signup Dialog' 
+        open={open}
+      >
         <DialogContent dividers>
 
             {
               childrenWithProps
             }
         </DialogContent>
-        
       </Dialog>
     </div>
   );

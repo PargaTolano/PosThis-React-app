@@ -6,12 +6,25 @@ import { usePagination }          from '_hooks';
 
 import styles from '_styles/PaginationElement.module.css';
 
-export const PaginationElement = ({name, hasFetched, total, last, limit, onIntersection}) => {
+const defaultMessage = 'Pagination Element Scrolled into view';
+const defaultFunc = () => void console.log(defaultMessage);
 
-    const more = usePagination(hasFetched, total, last, limit, onIntersection);
+export const PaginationElement = ({
+    name , 
+    hasFetched, 
+    total, 
+    last,
+    limit,
+    onIntersection = defaultFunc,
+    rootMargin     = '0px'}) => {
+
+    const {ref, more} = usePagination(hasFetched, total, last, limit, onIntersection, rootMargin);
 
     return (
-        <div className={styles.loading}>
+        <div 
+            ref={ref}
+            className={styles.loading}
+        >
 
             {
                 more ?

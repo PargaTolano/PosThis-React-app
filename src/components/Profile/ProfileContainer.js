@@ -54,7 +54,7 @@ export const ProfileContainer = ( props ) => {
               <EditInfo user={user} setUser={setUser}/>
             </DialogEditInfo>
           }
-          <ProfileCard user={user} {...rest}/>
+          <ProfileCard user={user} setUser={setUser} {...rest}/>
         </div>
 
 

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect }  from 'react';
 
-export const usePagination = ( hasFetched, total, last, limit, onIntersection) =>{
+export const usePagination = ( hasFetched, total, last, limit, onIntersection, rootMargin = '0px') =>{
 
     const [ more, setMore ] = useState( true );
         
@@ -12,22 +12,26 @@ export const usePagination = ( hasFetched, total, last, limit, onIntersection) =
         }
     }, [ hasFetched, total, last, limit ]);
 
-    useEffect( () =>{
+    useEffect( () => {
         let observer = new IntersectionObserver(
             (entries, obs) => {
+
                 entries.forEach( entry =>{
-                    if (!entry.isIntersecting) onIntersection(); 
+                    if (entry.isIntersecting) onIntersection(); 
                 });
             },
             {
-                root: ref.current,
-                threshold: 0.5,
+                root: null,
+                rootMargin,
             });
 
-        return () => observer.disconnect();
+        observer.observe(ref.current);
+
+
+        return () => void observer.disconnect();
     },[]);
 
-    return more;
+    return {ref, more};
 };
 
 export default usePagination;

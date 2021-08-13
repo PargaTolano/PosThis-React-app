@@ -42,7 +42,7 @@ const createFollow = async ( followedId ) => {
         headers
     };
     
-    return requestWrapper( await getURL( `api/follows-create/${followedId}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/follows-create/${followedId}` ), options ));
 };
 
 /**
@@ -57,7 +57,7 @@ const deleteFollow = async ( id ) =>{
         headers
     };
     
-    return requestWrapper( await getURL( `api/follows-delete/${id}` ), options );
+    return requestWrapper( async () => fetch( await getURL( `api/follows-delete/${id}` ), options ));
 };
 
 //API ENTRYPOINT CORRECTION DONE

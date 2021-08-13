@@ -1,1 +1,2 @@
-export * from './UserCard';
+export * from './SearchUserCard';
+export * from './SearchPostCard';

@@ -37,7 +37,7 @@ export const PostDetail = ( props ) => {
       &&
       <>
         <div component='h4' variant='h2' className={styles.titleBegin}>
-          <strong>Detalle del post</strong>
+          <strong>Detailed Post</strong>
         </div>
         <div className={styles.cardHolder}>
           <PostCard post={post} history={history}/>

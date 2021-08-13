@@ -87,7 +87,7 @@ export const DialogEditInfo = ({children, color}) => {
       >
         <SettingsIcon />
       </IconButton>
-      <Dialog onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
+      <Dialog style={{zIndex: 10001}} onClose={handleClose} aria-labelledby='customized-dialog-title' open={open}>
         <DialogContent dividers>
             {childrenWithProps}
         </DialogContent>

@@ -13,96 +13,73 @@ import { getFeed }                    from '_api';
 
 import { loadingState }               from '_hooks';
 
-import backapp3                       from 'assets/backapp3.png';
+import { toastService }               from '_services';
 
-const useStyles = makeStyles((theme) => ({
-  Background: {
-    backgroundImage: `url('${backapp3}')`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '100vh'
-  },
-  titleBegin:{
-    color: 'white',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontSize: 30,
-    width: '100%',
-    marginTop: '24px',
-    paddingBottom: theme.spacing(3),
-    textAlign: 'center',
-    flexDirection:'column',
-  },
-  loading:{
-    position:       'fixed',
-    display:        'flex',
-    alignItems:     'center',
-    justifyContent: 'center',
-    top:            '0',
-    left:           '0',
-    width:          '100vw',
-    height:         '100vh',
-    zIndex:         '2000',
-    backgroundColor: '#00000055',
-  }
-}));
+import styles from '_styles/PostFeed.module.css';
 
-const limit = 5;
+const limit = 4;
 
 export const Feed = (props) => {
 
   const { history } = props;
-  
-  const classes = useStyles();
 
+  const [paginationActive, setPaginationActive] = useState(false);
   const [posts, setPosts] = useState([]);
   const [total, setTotal] = useState(0);
   const [last, setLast]   = useState(0);
   const [hasFetched, setHasFetched] = useState(false);
+  const [refresh, setRefresh]       = useState(true);
 
-  const loadFeed = ()=>{
+  const toggleRefresh = ()=>setRefresh(x=>!x);
 
-    getFeed(last, limit)
-    .then( ({data:responseData, err}) =>{
+  const loadFeed = async ()=>{
 
-      if ( err !== null )
-        return;
+    const {data:responseData, err} = await getFeed(0, Math.max(total, limit));
+    if ( err !== null )
+      return;
 
-      const { data } = responseData;
+    const { data } = responseData;
 
-      setHasFetched(true);
+    setHasFetched(true);
 
-      if ( data !== null)
-        setPosts([...posts,...data]);
-    });
+    if ( data === null) return;
+
+    setLast( data.length );
+    setTotal( x => x + data.length)
+    setPosts(data);
+    setPaginationActive(true);
   };
 
   useEffect(() => {
     loadFeed();
   },[]);
 
-  const onSrolledToBottom = ()=>{
-    getFeed(last, limit)
-    .then( ({data:responseData, err}) =>{
-      
+  useEffect(() => {
+    (async()=>{
+
+      if (!paginationActive) return;
+
+      const {data:responseData, err} = await getFeed(total, limit);
       loadingState.set(false);
-      if ( err !== null )
+      if ( err !== null ) {
+        console.log('ERROR : TOTAL, LIMIT', total, limit);
+        toastService.makeToast('Error on feed pagination call: ' + err, 'error');
         return;
-
+      }
+  
       const { data } = responseData;
-      
-      if ( data === null) return;
 
+      if ( data === null) return;
+  
+      console.log('new total', total + data.length);
       setLast(data.length);
-      setTotal(total + data.length);
-      setPosts([...posts,...data]);
-    });
-  };
+      setTotal( x => x + data.length   );
+      setPosts( x => [...x, ...data] );
+    })();
+  },[refresh]);
 
   return (
-    <div className={classes.Background}>
+    <div className={styles.root}>
       <NavBar history={history}/>
       <CreatePostForm afterUpdate={loadFeed}/>
       {
@@ -114,7 +91,8 @@ export const Feed = (props) => {
         total           = {total}
         last            = {last}
         limit           = {limit}
-        onIntersection  = {onSrolledToBottom}
+        onIntersection  = {toggleRefresh}
+        rootMargin      = '400px'
       />
     </div>
   );

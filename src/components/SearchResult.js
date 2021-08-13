@@ -1,59 +1,15 @@
 import React                  from 'react';
 
-import { makeStyles }         from '@material-ui/core/styles';
+import { NavBar }             from 'components/Feed';
 
-import { NavBar   }           from 'components/Feed';
-import { PostCard }           from 'components/Post';
-import { UserCard }           from 'components/Search';
+import {
+  SearchUserCard, 
+  SearchPostCard
+} from 'components/Search';
 
 import { useMakeSearch } from '_hooks';
 
-import backapp3               from 'assets/backapp3.png';
-
-const useStyles = makeStyles( ( theme ) => ({
-  Background: {
-    backgroundImage: `url('${backapp3}')`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '100vh',
-  },
-  cardHolder: {
-    backgroundColor: 'transparent',
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  titleBegin: {
-    color: 'white',
-    fontFamily: 'Arial',
-    fontStyle: 'normal',
-    fontSize: 30,
-    width: '100%',
-    paddingBottom: theme.spacing(3),
-    textAlign: 'center',
-    flexDirection: 'column',
-  },
-  ucHolder: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'center',
-    justifyContent: 'center',
-    width: 600,
-    [theme.breakpoints.down('md')]:{
-      width: 'auto'
-    }
-  },
-}));
+import styles                  from '_styles/SearchResult.module.css';
 
 export const SearchResult = ( props ) => {
 
@@ -61,31 +17,31 @@ export const SearchResult = ( props ) => {
 
   const { query } = match.params;
 
-  const classes = useStyles();
   const [ready, response] = useMakeSearch(query || '');
   
   return (
-    <div className={classes.Background}>
+    <div className={styles.root}>
       <NavBar  auth={auth} history={history}/>
-      <div className={classes.cardHolder}>
-        <div component='h4' variant='h2' className={classes.titleBegin}>
-          <strong>Resultado de Búsqueda</strong>
+
+      <section className={styles.resultSection}>
+        <h3 className={styles.resultTitle}>Users</h3>
+        <div className={styles.resultCards}>
+          {
+            ready && ( response.users?.map( user =><SearchUserCard key={user.id} user={user} auth={auth}/>) )
+          }
         </div>
-      </div>
-      <div className={classes.ucHolder}>
-        {
-          ready && ( response.users?.map( user =><UserCard key={user.publisherID} user={user} auth={auth}/>) )
-        }
-        
-      </div>
-      <div className={classes.cardHolder}>
-        <div component='h4' variant='h2' className={classes.titleBegin}>
-          <strong>Posts/Hashtags Relacionados</strong>
+        <h4 className={styles.seeMore}> See more..</h4>
+      </section>
+
+      <section className={styles.resultSection}>
+        <h3 className={styles.resultTitle}>PosThis!</h3>
+        <div className={styles.resultCards}>
+          { 
+            ready && ( response.posts?.map( post =><SearchPostCard key={post.postID} post={post}/>) )
+          }
         </div>
-        {
-          ready && ( response.posts?.map( post =><PostCard key={post.postId} post={post} history={history}/>) )
-        }
-      </div>
+        <h4 className={styles.seeMore}> See more..</h4>
+      </section>
     </div>
   );
 };

@@ -87,19 +87,19 @@
 
 .date{
   font-size: 0.7rem;
-  color:    gray;
+  color:    #CCCCCC;
   display:  block
 }
 
 .avatar{
-  background-color: #333333;
-  border: 1px solid #f28a9a
+  border:           1px solid #f28a9a;
+  background-color: #444;
 }
 
 .cardBtn {
-  align-items:     center;
-  justify-content: space-around;
-  color:          white;
+  align-items:      center;
+  justify-content:  space-around;
+  color:            white;
 }
 
 .saveIcon{
@@ -115,11 +115,11 @@
 }
 
 .avatar{
-  width:  45px;
-  height: 45px;
-  border-radius: 50%;
-  background-color: #333333;
-  border: 1px solid #f28a9a;
+  width:                45px;
+  height:               45px;
+  border-radius:        50%;
+  background-color:     #444;
+  border:               none;
 }
 
 .date{

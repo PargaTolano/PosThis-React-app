@@ -17,7 +17,7 @@ import {
 
 import { makeStyles }     from '@material-ui/core/styles';
 
-import { updateUser }                           from '_api';
+import { updateUser, validatePassword }                           from '_api';
 import { fileToBase64, validateUpdateUser }     from '_utils';
 import { handleResponse }                       from '_helpers';
 import { authenticationService }                from '_services';    
@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+let timeout = null;
 
 export const EditInfo = ( props ) => {
 
@@ -109,6 +110,7 @@ export const EditInfo = ( props ) => {
     changedCoverPic:    false,
     coverPic:           null,
     coverPicPreview:    user.coverPicPath,
+    canSubmit:          false,
   });
 
   const [validation, setValidation]= useState({
@@ -122,11 +124,36 @@ export const EditInfo = ( props ) => {
     setValidation( validateUpdateUser( state ) );
   },[state]);
 
-  const onChangeTextField = e=>{
+  const onChangeTextField = e =>{
+
     setState({
       ...state,
       [e.target.name]: e.target.value
     });
+
+    if ( e.target.name == 'password'){
+
+      if ( timeout != null ) clearTimeout(timeout);
+
+      timeout = setTimeout(async (value)=> {
+
+        if (value === '') return;
+
+        const {data:responseData, err} = await validatePassword(value);
+
+        if ( err !== null || responseData === null ) return;
+
+        const { data } = responseData;
+
+        setState({
+          ...state,
+          [e.target.name]: value,
+          canSubmit: data
+        });
+        timeout = null;
+      }, 300, e.target.value);
+    }
+
   };
 
   const onChangeProfilePic = async (e) => {
@@ -165,22 +192,22 @@ export const EditInfo = ( props ) => {
  
   const onClickCoverPic   = () => inputCoverRef  .current?.click();
 
-  const onSubmit = e=>{
+  const onSubmit =async e => {
     e.preventDefault();
 
     let model = new UpdateUserViewModel(state);
 
-    updateUser(authenticationService.currentUserValue.id, model)
-      .then( handleResponse )
-      .then( res =>{
-        const { data } = res;
-        setUser( data );
-        handleClose();
-        authenticationService.logout();
-      })
-      .catch( console.warn );
+    const {data:responseData, err } = await updateUser(authenticationService.currentUserValue.id, model);
+
+    if ( err !== null || responseData === null ) return;
+
+    const { data } = responseData;
+    setUser( data );
+    handleClose();
   };
   
+  const submitable = validation.validated && state.canSubmit;
+
   return (
     <Container component='main' maxWidth='sm'>
       <CssBaseline />
@@ -320,9 +347,9 @@ export const EditInfo = ( props ) => {
             variant   ='contained'
             color     ='primary'
             className ={classes.submit}
-            disabled  = {!validation.validated}
+            disabled  = {!submitable}
           >
-            Guardar información
+            Save
           </Button>
         </form>
       </div>

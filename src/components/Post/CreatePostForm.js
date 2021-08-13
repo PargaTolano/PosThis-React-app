@@ -14,7 +14,6 @@ import {
 
 import { FormMediaGrid }          from 'components/Media';
 
-import { handleResponse }         from '_helpers';
 import { authenticationService }  from '_services';
 import { 
   fileToBase64,
@@ -47,15 +46,16 @@ export const CreatePostForm = (props) => {
   
   const onSubmit = async ( e )=>{
     e.preventDefault();
-    createPost( new CPostModel({userID: authenticationService.currentUserValue.id, content,files: images.map(x=>x.file)}))
-          .then(handleResponse)
-          .then( res =>{
-            setImages([]);
-            setContent('');
-            if( afterUpdate )
-              afterUpdate();
-          })
-          .catch(console.warn);
+    const { err } = await createPost( new CPostModel({
+        userID: authenticationService.currentUserValue.id,
+        content,
+        files: images.map(x=>x.file)
+      }));
+
+    setImages([]);
+    setContent('');
+    if( afterUpdate && err === null)
+      afterUpdate();
   };
 
   const onChangeImage = async ( e )=>{

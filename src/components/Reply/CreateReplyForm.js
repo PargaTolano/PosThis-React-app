@@ -152,7 +152,7 @@ export const CreateReplyForm = (props) => {
           variant='h2' 
           className={classes.titleForm}
         >
-          <strong>Nueva Respuesta!</strong>
+          <strong>Reply</strong>
         </div>
         <TextField
             variant      = 'outlined'
@@ -161,7 +161,7 @@ export const CreateReplyForm = (props) => {
             rows         = {3}
             rowsMax      = {3}
             fullWidth
-            label        = 'Escribir...'
+            label        = "What's do you think?"
             name         = 'postContent'
             autoComplete = 'postContent'
             autoFocus
@@ -181,7 +181,7 @@ export const CreateReplyForm = (props) => {
             className= {classes.submit}
             disabled = {!validation.validated}
         >
-          Publicar
+          Reply!
         </Button>
           
         <input 

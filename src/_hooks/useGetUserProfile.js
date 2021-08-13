@@ -9,11 +9,13 @@ export const useGetUserProfile = ( id ) =>{
 
     const [ state, setState ] =  useState([false, null]);
 
-    useEffect(()=>{
-        loadingState.set( true );
+    useEffect( () => {
 
-        getUser( id )
-        .then ( ({data:responseData, err})=> {
+        (async()=>{
+
+            loadingState.set( true );
+
+            const {data:responseData, err} = await getUser( id );
 
             loadingState.set( false );
             if ( err !== null){
@@ -22,9 +24,11 @@ export const useGetUserProfile = ( id ) =>{
             }
 
             const {data} = responseData;
-            
+
             setState( [ true, data ] );
-        })
+
+        })();
+        
     }, [id]);
 
     const setUser = ( user )=>{

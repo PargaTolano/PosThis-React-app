@@ -24,7 +24,7 @@ import { validateSignup } from '_utils';
 import { createUser }     from '_api';
 
 import { SignUpModel }    from '_model';
-import { authenticationService } from '_services';
+import { authenticationService, toastService } from '_services';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -77,7 +77,7 @@ export const SignUp = (props)=>{
     });
   }
 
-  const onSubmit = (e) =>{
+  const onSubmit = async (e) =>{
     
     e.preventDefault();
 
@@ -85,11 +85,19 @@ export const SignUp = (props)=>{
 
     const model = new SignUpModel(state);
 
-    createUser(model)
-    .then( handleResponse)
-    .then( handleClose )
-    .catch(console.warn)
-    .then( handleClose );
+    const {data:responseData, err} = await createUser(model);
+
+    if ( err !== null){
+      toastService
+        .makeToast( "An error ocurred while creating user, try again later", "error");
+      return;
+    }
+    
+    const { message} = responseData;
+
+    toastService.makeToast( message, "success");
+
+    handleClose();
   };
 
   useEffect(() => {
@@ -110,7 +118,7 @@ export const SignUp = (props)=>{
         </Typography>
 
         <Typography variant='body2'>
-          Únete a la nueva comunidad de PosThis
+          Join The PosThis Community!
         </Typography>
 
         <form className={classes.form} noValidate onSubmit = {onSubmit}>
@@ -130,7 +138,7 @@ export const SignUp = (props)=>{
                 !validation.username
                 && 
                 <Typography variant='body2' className={classes.fieldWarning}>
-                * Nombre de usuario no valido
+                * Username not valid
                 </Typography>
               }
             </Grid>
@@ -150,7 +158,7 @@ export const SignUp = (props)=>{
                 !validation.tag
                 && 
                 <Typography variant='body2' className={classes.fieldWarning}>
-                * Tag no valido
+                * Tag not valid
                 </Typography>
               }
             </Grid>
@@ -171,7 +179,7 @@ export const SignUp = (props)=>{
                 !validation.email
                 && 
                 <Typography variant='body2' className={classes.fieldWarning}>
-                * Email no valido
+                * Email not valid
                 </Typography>
               }
             </Grid>
@@ -192,7 +200,7 @@ export const SignUp = (props)=>{
                 !validation.password 
                 &&
                 <Typography variant='body2' className={classes.fieldWarning}>
-                * Contraseña no valida
+                * Password not valid
                 </Typography>
               }
             </Grid>
@@ -207,7 +215,7 @@ export const SignUp = (props)=>{
             className={classes.submit}
             disabled = {!validation.validated}
           >
-            Regístrate ahora
+            Sign Up
           </Button>
         </form>
       </div>

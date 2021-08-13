@@ -36,12 +36,24 @@ const createUser = async ( model ) => {
     };
 
     const options = {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify( model ),
         headers
     };
 
     return requestWrapper( async ()=> fetch( await getURL( `api/users-create` ), options ) );
+};
+
+
+const validatePassword = async ( password ) => {
+
+    const headers = authHeader();
+
+    const options = {
+        headers
+    };
+
+    return requestWrapper( async ()=> fetch( await getURL( `/api/validate-password/${password}`), options ) );
 };
 
 /**
@@ -83,7 +95,7 @@ const updateUser = async ( id, model ) =>{
     const headers = authHeader();
 
     let body = new FormData();
-    body.append('username'    , model.userName    );
+    body.append('username'    , model.username    );
     body.append('tag'         , model.tag         );
     body.append('email'       , model.email       );
     body.append('profilePic'  , model.profilePic  );
@@ -116,6 +128,7 @@ export{
     getUsers,
     getUser,
     createUser,
+    validatePassword,
     logIn,
     logOut,
     updateUser,

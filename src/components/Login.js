@@ -16,47 +16,18 @@ import {
 import { makeStyles }             from '@material-ui/core/styles';
 import PersonPinIcon              from '@material-ui/icons/PersonPin';
 
-import { DialogSignup, SignUp }   from 'components/Registro';
+import { DialogSignup, SignUp }   from 'components/Signup';
 
 import { authenticationService, toastService }  from '_services';
 import { routes }                 from '_utils';
 
 import { loadingState }           from '_hooks';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  }, 
-  image: {
-    backgroundImage: 'url(/img/backgroundPT.png)',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.primary.dark,
-  },
-  form: {
-    width: '100%', 
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
+import styles from '_styles/Login.module.css';
 
 export const Login = (props) => {
 
   const { history} = props;
-
-  const classes = useStyles();
 
   const [ username, setUsername ] = useState('');
   const [ password, setPassword ] = useState('');
@@ -68,42 +39,40 @@ export const Login = (props) => {
 
     loadingState.set(true);
 
-    authenticationService
+    const data = await authenticationService
       .login( username, password )
-      .then( data => {
-        
-        loadingState.set(false);
+    
+    loadingState.set(false);
 
-        if ( data === null)
-          return;
+    if ( data === null)
+      return;
 
-        toastService.makeToast( data.message, 'success')
-        history.push( routes.feed );
-      })
+    toastService.makeToast( data.message, 'success')
+    history.push( routes.feed );
   };
 
   return (
-    <Grid container component='main' className={classes.root}>
+    <Grid container component='main' className={styles.root}>
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12}    sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
+      <Grid item xs={false} sm={4} md={7} lg={8} className={styles.image} />
+      <Grid item xs={12}    sm={8} md={5} lg={4} component={Paper} elevation={6} square>
+        <div className={styles.paper}>
+          <Avatar className={styles.avatar}>
             <PersonPinIcon />
           </Avatar>
 
           <Typography component='h1' variant='h5'>
-            <strong>Inicia Sesión</strong>
+            <strong>Log In</strong>
           </Typography>
 
-          <form className={classes.form} noValidate onSubmit={onSubmit}>
+          <form className={styles.form} noValidate onSubmit={onSubmit}>
             <TextField
               variant='outlined'
               margin='normal'
               required
               fullWidth
               id='email'
-              label='Correo electrónico o Nombre de Usuario'
+              label='Username'
               name='email'
               autoComplete='email'
               autoFocus
@@ -116,7 +85,7 @@ export const Login = (props) => {
               required
               fullWidth
               name='password'
-              label='Contraseña'
+              label='Password'
               type='password'
               id='password'
               autoComplete='current-password'
@@ -128,18 +97,18 @@ export const Login = (props) => {
               fullWidth
               variant='contained'
               color='primary'
-              className={classes.submit}
+              className={styles.submit}
             >
-              Ingresar
+              Log In
             </Button>
           </form>
-          <Grid container>
-              <Grid item>
-                <DialogSignup>
-                  <SignUp/>
-                </DialogSignup>
-              </Grid>
-            </Grid>
+
+          <div className={styles.modalContainer}>
+            <DialogSignup>
+              <SignUp/>
+            </DialogSignup>
+          </div>
+          
         </div>
       </Grid>
     </Grid>
