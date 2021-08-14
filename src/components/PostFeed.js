@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { makeStyles }                 from '@material-ui/core/styles';
-import { CircularProgress }           from '@material-ui/core';
-
 import { NavBar, PostContainer }      from 'components/Feed';
 
 import { CreatePostForm }             from 'components/Post';
@@ -62,7 +59,6 @@ export const Feed = (props) => {
       const {data:responseData, err} = await getFeed(total, limit);
       loadingState.set(false);
       if ( err !== null ) {
-        console.log('ERROR : TOTAL, LIMIT', total, limit);
         toastService.makeToast('Error on feed pagination call: ' + err, 'error');
         return;
       }

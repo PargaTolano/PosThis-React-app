@@ -72,7 +72,7 @@ export const DialogSignup = ({children}) => {
         type='button'
         fullWidth 
         variant ='contained' 
-        color   ='secondary'
+        color   ='primary'
         onClick ={handleClickOpen}
       >
         Sign up

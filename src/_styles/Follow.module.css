@@ -1,0 +1,13 @@
+.root{
+    padding:    0px!important;
+}
+
+.paper{
+    display:            flex;
+    flex-direction:     column;
+    align-items:        center;
+}
+
+.loading{
+    justify-content:    center;
+}

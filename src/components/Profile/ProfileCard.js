@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography
+  Button
 } from '@material-ui/core';
 
-import { makeStyles }   from '@material-ui/core/styles';
+import { 
+  DialogFollow, 
+  Followers, 
+  Following 
+} from 'components/Follow';
 
-import { createFollow, deleteFollow } from '_api';
-import { handleResponse }             from '_helpers';
-import { authenticationService}       from '_services';
-import { FollowViewModel }            from '_model';
+import { createFollow, deleteFollow }               from '_api';
+import { authenticationService, followService}      from '_services';
+import { FollowViewModel }                          from '_model';
 
 import profilePicPlaceholder from 'assets/avatar-placeholder.svg';
 
@@ -22,7 +21,7 @@ import styles from '_styles/ProfileCard.module.css';
 export const ProfileCard = ( props ) => {
   const { user, setUser } = props;
 
-  const OnClickFollowButton = async ()=>{
+  const onClickFollowButton = async ()=>{
     const model = new FollowViewModel({
       followedID: user.id,
       followerID: authenticationService.currentUserValue.id });
@@ -44,6 +43,21 @@ export const ProfileCard = ( props ) => {
     }
   };
 
+  const [{open, loading, title, users}, setState] = 
+                                        useState({
+                                          open:       false,
+                                          loading:    false,
+                                          title:      'Followers',
+                                          users:      null
+                                        });
+
+  useEffect(()=>{
+    const subs = 
+      followService.follow$.subscribe( x => void setState(x));
+      
+    return ()=> subs.unsubscribe();
+  },[]);
+
   return (
     <div className={styles.cardContainer}>
       <div className={styles.card}>
@@ -57,8 +71,18 @@ export const ProfileCard = ( props ) => {
             {`@${user.tag}`}
           </h4>
           <div className={styles.follows}>
-            <span className={styles.followLink}>{user.followerCount} Followers</span>
-            <span className={styles.followLink}>{user.followingCount} Following</span>
+            <span 
+              className = { styles.followLink }
+              onClick   = { ()=>followService.getFollowerUsers(user.id) }
+            >
+              {user.followerCount} Followers
+            </span>
+            <span 
+              className = { styles.followLink }
+              onClick   = { ()=>followService.getFollowedUsers(user.id) }
+            >
+              {user.followingCount} Following
+            </span>
           </div>
         </div>
 
@@ -71,14 +95,20 @@ export const ProfileCard = ( props ) => {
               variant='contained'
               color='secondary'
               className={styles.followBtn}
-              onClick={OnClickFollowButton}
+              onClick={onClickFollowButton}
             >
               { user.isFollowed ? 'Unfollow' : 'Follow'}
             </Button>
           </div>
         }
 
-       
+        <DialogFollow
+          open={open}
+          title={title}
+          onClose={followService.close}
+        >
+          <Followers loading={loading} users={users}/>
+        </DialogFollow>
       </div>
     </div>
   );
