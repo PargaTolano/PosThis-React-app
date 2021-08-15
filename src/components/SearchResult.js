@@ -7,6 +7,8 @@ import {
   SearchPostCard
 } from 'components/Search';
 
+import { DialogFollowWrapper } from 'components/Follow';
+
 import { useMakeSearch } from '_hooks';
 
 import styles                  from '_styles/SearchResult.module.css';
@@ -21,6 +23,9 @@ export const SearchResult = ( props ) => {
   
   return (
     <div className={styles.root}>
+
+      <DialogFollowWrapper history={history}/>
+
       <NavBar  auth={auth} history={history}/>
 
       <section className={styles.resultSection}>

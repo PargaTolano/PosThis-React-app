@@ -13,10 +13,8 @@ import styles from '_styles/Follow.module.css';
 export const Followers = ( {loading, users} ) => {
     
     return (
-        <Container 
+        <div 
             className = { styles.root }
-            component = 'div' 
-            maxWidth  = 'xs'
         >
             <CssBaseline />
             
@@ -29,7 +27,7 @@ export const Followers = ( {loading, users} ) => {
                         users?.map((v,i)=><FollowCard key={v.id} user={v}/>)
                 }
             </div>    
-        </Container>
+        </div>
     );
   }
   

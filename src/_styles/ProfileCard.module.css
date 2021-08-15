@@ -49,6 +49,7 @@
     border:             5px solid white;
     border-radius:      50%;
     background-color:   #444;
+    object-fit:         cover;
 }
 
 .follows{

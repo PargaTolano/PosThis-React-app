@@ -12,6 +12,7 @@ import styles from '_styles/FollowCard.module.css';
 import defaultProfilePic  from 'assets/avatar-placeholder.svg';
 import { Link } from 'react-router-dom';
 import { routes } from '_utils';
+import { authenticationService } from '_services';
 
 export const FollowCard = ({user:userProp}) => {
 
@@ -46,14 +47,17 @@ export const FollowCard = ({user:userProp}) => {
                 </div>
             </Link>
             
-            <Button
-                variant='contained'
-                color='secondary'
-                className={styles.followBtn}
-                onClick={onClickFollowButton}
-            >
-                { user.isFollowed ? 'Unfollow' : 'Follow' }
-            </Button>
+            {   
+                authenticationService.currentUserValue.id !== user.id &&
+                <Button
+                    variant='contained'
+                    color='secondary'
+                    className={styles.followBtn}
+                    onClick={onClickFollowButton}
+                >
+                    { user.isFollowed ? 'Unfollow' : 'Follow' }
+                </Button>
+            }
         </div>
     )
 }

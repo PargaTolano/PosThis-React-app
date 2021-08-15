@@ -66,8 +66,7 @@ export const Feed = (props) => {
       const { data } = responseData;
 
       if ( data === null) return;
-  
-      console.log('new total', total + data.length);
+      
       setLast(data.length);
       setTotal( x => x + data.length   );
       setPosts( x => [...x, ...data] );

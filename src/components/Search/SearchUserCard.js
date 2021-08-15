@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { followService}      from '_services';
 import { routes } from '_utils';
 
 import defaultImage from 'assets/avatar-placeholder.svg';
-
 import styles from '_styles/UserCard.module.css';
 import { prettyMagnitude } from '_helpers';
 
@@ -22,20 +22,20 @@ const ChannelFollows = ({ user })=>{
     return(
         <div className={styles.followContainer}>
             <div className={styles.followCount}>
-                <Link 
+                <span 
                     className={styles.followLink} 
-                    to={routes.getProfile(user.id)}
+                    onClick   = { ()=>followService.getFollowerUsers(user.id) }
                 >
                     { prettyMagnitude(user.followerCount) } followers
-                </Link>
+                </span>
             </div>
             <div className={styles.followCount}>
-                <Link 
+                <span 
                     className={styles.followLink} 
-                    to={routes.getProfile(user.id)}
+                    onClick   = { ()=>followService.getFollowedUsers(user.id) }
                 >
                     { prettyMagnitude(user.followingCount) } following   
-                </Link>     
+                </span>     
             </div>
         </div>
     );

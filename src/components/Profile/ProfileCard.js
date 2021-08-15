@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import {
   Button
 } from '@material-ui/core';
-
-import { 
-  DialogFollow, 
-  Followers, 
-  Following 
-} from 'components/Follow';
 
 import { createFollow, deleteFollow }               from '_api';
 import { authenticationService, followService}      from '_services';
@@ -42,21 +36,6 @@ export const ProfileCard = ( props ) => {
       setUser(data);
     }
   };
-
-  const [{open, loading, title, users}, setState] = 
-                                        useState({
-                                          open:       false,
-                                          loading:    false,
-                                          title:      'Followers',
-                                          users:      null
-                                        });
-
-  useEffect(()=>{
-    const subs = 
-      followService.follow$.subscribe( x => void setState(x));
-      
-    return ()=> subs.unsubscribe();
-  },[]);
 
   return (
     <div className={styles.cardContainer}>
@@ -102,13 +81,7 @@ export const ProfileCard = ( props ) => {
           </div>
         }
 
-        <DialogFollow
-          open={open}
-          title={title}
-          onClose={followService.close}
-        >
-          <Followers loading={loading} users={users}/>
-        </DialogFollow>
+        
       </div>
     </div>
   );

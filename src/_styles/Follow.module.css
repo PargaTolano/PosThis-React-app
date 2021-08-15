@@ -1,5 +1,7 @@
 .root{
     padding:    0px!important;
+    height:     200px;
+    overflow-y: auto;
 }
 
 .paper{

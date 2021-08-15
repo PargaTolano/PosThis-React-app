@@ -12,6 +12,7 @@ import {
   ReplyContainer
 } from 'components/Reply';
 
+
 import { routes }                                 from '_utils';
 import { useGetDetailedPost                       } from '_hooks';
 
@@ -32,22 +33,20 @@ export const PostDetail = ( props ) => {
     <div className={styles.background}>
       <NavBar history={history}/>
 
-    {
-      (ready && post )
-      &&
-      <>
-        <div component='h4' variant='h2' className={styles.titleBegin}>
-          <strong>Detailed Post</strong>
-        </div>
-        <div className={styles.cardHolder}>
-          <PostCard post={post} history={history}/>
-          <CreateReplyForm postId={post?.postID}/>
-          <ReplyContainer id={post.postID}/>
-        </div>
-      </>
-    }
-      
-      
+      {
+        (ready && post)
+        &&
+        <>
+          <div component='h4' variant='h2' className={styles.titleBegin}>
+            <strong>Detailed Post</strong>
+          </div>
+          <div className={styles.cardHolder}>
+            <PostCard post={post} history={history}/>
+            <CreateReplyForm postId={post?.postID}/>
+            <ReplyContainer id={post.postID}/>
+          </div>
+        </>
+      }
     </div>
   );
 };

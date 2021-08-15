@@ -20,6 +20,7 @@
 
 .detail{
     display:            flex;
+    margin-right:       auto;
     flex-flow: column   nowrap;
     justify-content:    flex-start;
     align-items:        center;
@@ -55,8 +56,7 @@
 }
 
 .followBtn{
-    display:        inline-block;
-    margin-left:    auto;
+    margin-left:    auto!important;
     align-self:     center;
     color:          white;
 }

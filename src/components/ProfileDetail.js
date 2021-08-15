@@ -3,15 +3,15 @@ import { Redirect }             from 'react-router-dom';
 
 import { NavBar }               from 'components/Feed';
 import { ProfileContainer }     from 'components/Profile';
+import { DialogFollowWrapper } from 'components/Follow';
 
 import { routes }               from '_utils';
 import { useGetUserProfile }    from '_hooks';
 
 import styles from '_styles/ProfileDetail.module.css';
-export const ProfileDetail = (props) => {
-
-  const { match, ...rest } = props;
-  const { id }             = match.params;
+export const ProfileDetail = ({ match, history, ...rest }) => {
+  
+  const { id }  = match.params;
 
   const [[ready, user], setUser] = useGetUserProfile( id || '' );
 
@@ -21,6 +21,8 @@ export const ProfileDetail = (props) => {
 
   return (
       <div className = { styles.root }>
+
+        <DialogFollowWrapper history={history}/>
         <NavBar {...rest}/>
         {
           ready && <ProfileContainer user={user} setUser={setUser} {...rest}/>
