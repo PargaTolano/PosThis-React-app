@@ -54,7 +54,7 @@ export const Feed = (props) => {
   useEffect(() => {
     (async()=>{
 
-      if (!paginationActive) return;
+      if (!paginationActive || last < limit) return;
 
       const {data:responseData, err} = await getFeed(total, limit);
       loadingState.set(false);

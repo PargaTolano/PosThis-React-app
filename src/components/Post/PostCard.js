@@ -42,9 +42,9 @@ import styles from '_styles/PostCard.module.css';
 
 export const PostCard = ( props ) => {
 
-  const { history } = props;
+  const { post:postProp, history } = props;
 
-  const [ post, setPost ] = useState( props.post );
+  const [ post, setPost ] = useState( postProp );
 
   const [ state, setState ] = useState({
     editMode:         false,

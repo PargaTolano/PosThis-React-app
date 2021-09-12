@@ -51,8 +51,6 @@ export const ReplyCard = ( props ) => {
 
   const temp = { state, setState};
 
-  const dateString = new Date( Date.parse( reply.date ) ).toLocaleString();
-
   const onClickSave = async ()=>{
 
     let model = new UReplyModel({
@@ -145,7 +143,6 @@ export const ReplyCard = ( props ) => {
   };
 
   return (
-
     <div className={styles.root}>
       <div className={styles.rooter}>
         <div className={styles.uproot}></div>
@@ -219,14 +216,13 @@ export const ReplyCard = ( props ) => {
             </>
           }
 
-          <div className={styles.contmedias}>
-            <MediaGrid medias={ state.medias } {...temp}/>
+          <div className={styles.contMedia}>
+            <MediaGrid media={ state.medias } {...temp}/>
           </div>
 
         </CardContent>
+      </div>
     </div>
-    </div>
-    
   );
 };
 

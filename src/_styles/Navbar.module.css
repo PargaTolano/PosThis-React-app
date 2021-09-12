@@ -170,3 +170,9 @@
     margin:             0.25em 0px;
     background-color:   #DDDDDD;
 }
+
+@media(max-width: 768px){
+    .logo:last-child{
+        display: none
+    }
+}

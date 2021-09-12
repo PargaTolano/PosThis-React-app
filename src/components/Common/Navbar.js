@@ -1,7 +1,6 @@
 import React,{ useRef, useState, useEffect} from 'react';
 
 import { Link }                   from 'react-router-dom';
-import { fade, makeStyles }       from '@material-ui/core/styles';
 
 import {  
   Search as SearchIcon, 
@@ -83,10 +82,6 @@ export const NavBar = ( props ) => {
   const [query, setQuery]       = useState('');
 
   const handleClick = (e) => { e.stopPropagation(); setDropDownVisible(true) };
-
-  const handleClose = () => void setDropDownVisible(false);
-
-  const handleLogOut = () => void authenticationService.logout();
 
   const onChange = ( e ) => void setQuery( e.target.value);
 

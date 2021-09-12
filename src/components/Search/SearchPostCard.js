@@ -66,7 +66,7 @@ const ChannelMediaPreview = ({post})=>{
 
     return (
         <div className={styles.mediaPreview}>
-            <img className={styles.imgPreview} src={post.medias[0]}/>
+            <img className={styles.imgPreview} src={post.medias[0].path}/>
         </div>
     );
 };

@@ -1,2 +1,2 @@
-export * from './Navbar';
+export * from '../Common/Navbar';
 export * from './PostContainer';
